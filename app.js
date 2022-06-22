@@ -8,6 +8,7 @@ const path = require('path');
 const main = require("./routes/user_account");
 // const board = require("./routes/user_board");
 
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -21,5 +22,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 // }));
 
 app.use("/", main);
+
+app.use("/kakao", require('./routes/kakao'));
 
 module.exports = app;
