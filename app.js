@@ -23,6 +23,8 @@ app.use(session({
 
 app.use("/", main);
 
+
 app.use("/kakao", require('./routes/kakao'));
+
 
 module.exports = app;
