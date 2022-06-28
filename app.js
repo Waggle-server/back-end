@@ -23,8 +23,13 @@ app.use(session({
 
 app.use("/", main);
 
+// app.use('/notice', noticeRouter);
+// app.use('/board', boardRoter);
+// app.use('/friend', friendRouter);
+// app.use('/chat', chatRouter);
 
 app.use("/kakao", require('./routes/kakao'));
 
 
 module.exports = app;
+

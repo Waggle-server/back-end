@@ -12,6 +12,7 @@ const dbOption = {
 }
 
 const db = mysql.createConnection(dbOption);
+
 db.connect();
 
 module.exports = db;    
