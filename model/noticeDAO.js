@@ -38,11 +38,22 @@ const noticeRead = (parameters) =>{
     })
 }
 
+// const lastAutoInt = (parameters) =>{
+//     return new Promise((resolve, reject) =>{
+//         db.query(`SELECT LAST_INSERT_ID();`, (err, db_data) => {
+//             if(err) {
+//                 reject(err);
+//             } else {
+//                 resolve(db_data);
+//             }
+//         })
+//     })
+// }
 
 
 const noticeWrite = (parameters) =>{
     return new Promise((resolve, reject) =>{
-        db.query(`INSERT INTO notice (user_key, title, content, type) values(?, ?, ?, ?);`, [parameters.user_key, parameters.title, parameters.content, parameters.type], (err, db_data) => {
+        db.query(`INSERT INTO notice (user_key, title, img, content, type) values(?, ?, ?, ?, ?);`, [parameters.user_key, parameters.title, parameters.img, parameters.content, parameters.type], (err, db_data) => {
             if(err) {
                 reject(err);
             } else {
@@ -89,4 +100,6 @@ module.exports = {
     noticeWrite,
     noticeUpdate,
     noticeDelete
+
+    //lastAutoInt
 }

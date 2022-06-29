@@ -3,6 +3,7 @@ const router = express.Router();
 
 const noticeCtrl = require('../controller/noticeCtrl');
 
+const { noticeUpload } = require("../middleware/multer");
 
 
 
@@ -15,7 +16,10 @@ router.get('/read/:num', noticeCtrl.noticeRead);
 // post - db 넘기기
 
 router.get('/create', noticeCtrl.getNoticeCreate);
-router.post('/create', noticeCtrl.postNoticeCreate);
+router.post('/create', 
+    noticeUpload.single('img'),
+    noticeCtrl.postNoticeCreate
+);
 
 router.get('/update/:num', noticeCtrl.getNoticeUpdate);
 router.post('/update/:num', noticeCtrl.postNoticeUpdate);

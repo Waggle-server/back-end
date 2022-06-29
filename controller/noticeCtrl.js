@@ -1,19 +1,7 @@
+const fs = require('fs');
 const noticeDAO = require('../model/noticeDAO');
 
-/*
-router.get('/list', noticeCtrl.noticeList);
-router.get('/read/:num', noticeCtrl.noticeRead);
-
-router.get('/create', noticeCtrl.getNoticeCreate);
-router.post('/create', noticeCtrl.postNoticeCreate);
-
-router.get('/update/:num', noticeCtrl.getNoticeUpdate);
-router.post('/update/:num', noticeCtrl.postNoticeUpdate);
-
-router.post('/delete/:num', noticeCtrl.noticeDelete);
-
-*/
-
+const {imgRename} = require('../middleware/multer');
 
 
 // 공지사항
@@ -75,21 +63,47 @@ const getNoticeCreate = async (req, res) => {
 }
 
 const postNoticeCreate = async (req, res) => {
+    
+    const imgFile = req.file;
+
     const parameters = {
         user_key: req.body.user_key,
         title: req.body.title,
         content: req.body.content,
-        type: req.body.type
+        type: req.body.type,
+        img: (imgFile != undefined) ? true : false
     }
+
+    console.log(parameters);
+
+
     try {
-        await noticeDAO.noticeWrite(parameters);
-        res.send("write success");
+        const db_data = await noticeDAO.noticeWrite(parameters);
+        const notice_key = db_data.insertId
+
+
+        // 선 - 이미지 업로드, 후 - key값으로 rename
+        if(imgFile != undefined){
+
+            const img = imgRename(imgFile, notice_key);
+
+            await fs.rename(`${img.dir}/${imgFile.originalname}`, `${img.dir}/${img.name}`, (err)=>{
+                if(err){
+                    throw err;
+                } else{
+                    res.send("img uploded\nwrite success");
+                }
+            })
+
+        } else res.send("write success");
 
         // 알림 추가
     } catch (err) {
         console.log(err);
     }
 }
+
+
 
 const getNoticeUpdate = async (req, res) => {
 }
@@ -101,10 +115,11 @@ const postNoticeUpdate = async (req, res) => {
         user_key: req.body.user_key,
         title: req.body.title,
         content: req.body.content,
-        type: req.body.type
+        type: req.body.type,
     }
+    console.log(parameters);
     try {
-        const db_data = await noticeDAO.noticeUpdate(parameters);
+        await noticeDAO.noticeUpdate(parameters);
         res.send("update success");
     } catch (err) {
         console.log(err);
@@ -114,9 +129,22 @@ const postNoticeUpdate = async (req, res) => {
 const noticeDelete = async (req, res) => {
     const parameters = {
         notice_key: req.body.notice_key,
+        img: req.body.img
     }
+    console.log(parameters);
     try {
-        const db_data = await noticeDAO.noticeDelete(parameters);
+        await noticeDAO.noticeDelete(parameters);
+        if (parameters.img == 'true'){
+            fs.unlink(`public/images/notice/${parameters.notice_key}.jpg`, function(err){
+                console.log("image delete");
+            })
+            fs.unlink(`public/images/notice/${parameters.notice_key}.png`, function(err){
+                console.log("image delete");
+            })
+            fs.unlink(`public/images/notice/${parameters.notice_key}.gif`, function(err){
+                console.log("image delete");
+            })
+        }
         res.send("delete success");
     } catch (err) {
         console.log(err);
