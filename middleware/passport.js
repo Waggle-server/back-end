@@ -26,13 +26,8 @@ const kakao = passport.use('kakao', new KakaoStrategy({
     if(db_data.length === 0){
       await userDAO.insert_profile(parameters);
     }
-
-
-
     console.log(accessToken);
     console.log(refreshToken);
-
-    
   }
   
 ));

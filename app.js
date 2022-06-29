@@ -6,7 +6,8 @@ const path = require('path');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 const main = require("./routes/user_account");
-// const board = require("./routes/user_board");
+
+const noticeRouter = require("./routes/notice");
 
 
 app.set('views', path.join(__dirname, 'views'));
@@ -23,7 +24,7 @@ app.use(session({
 
 app.use("/", main);
 
-// app.use('/notice', noticeRouter);
+app.use('/notice', noticeRouter);
 // app.use('/board', boardRoter);
 // app.use('/friend', friendRouter);
 // app.use('/chat', chatRouter);
