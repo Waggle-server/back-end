@@ -1,6 +1,6 @@
-const fs = require('fs');
 const noticeDAO = require('../model/noticeDAO');
 
+const fs = require('fs');
 const {imgRename} = require('../middleware/multer');
 
 
@@ -78,7 +78,7 @@ const postNoticeCreate = async (req, res) => {
 
 
     try {
-        const db_data = await noticeDAO.noticeWrite(parameters);
+        const db_data = await noticeDAO.noticeCreate(parameters);
         const notice_key = db_data.insertId
 
 
@@ -91,11 +91,11 @@ const postNoticeCreate = async (req, res) => {
                 if(err){
                     throw err;
                 } else{
-                    res.send("img uploded\nwrite success");
+                    res.send("img uploded\ncreate success");
                 }
             })
 
-        } else res.send("write success");
+        } else res.send("create success");
 
         // 알림 추가
     } catch (err) {

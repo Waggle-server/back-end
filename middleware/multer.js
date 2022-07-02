@@ -32,6 +32,20 @@ const noticeUpload = multer({
 })
 
 
+const gpUpload = multer({
+  storage: multer.diskStorage({
+      // 폴더위치
+      destination(req, file, done) {
+          done(null, 'public/images/guestPlace');
+      },
+      filename: (req, file, done) => {
+          const fileName = file.originalname;
+          done(null, fileName);
+      },
+  }),
+  fileFilter: fileFilter
+})
+
 const imgRename = function(imgFile, key) {
     let img = {
         type: (imgFile.originalname).split('.')[1],
@@ -44,5 +58,6 @@ const imgRename = function(imgFile, key) {
 
 module.exports = {
     noticeUpload,
+    gpUpload,
     imgRename
 }

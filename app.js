@@ -11,6 +11,9 @@ const path = require('path');
 const main = require("./routes/user_account");
 
 const noticeRouter = require("./routes/notice");
+const guestPlaceRouter = require("./routes/guestPlace");
+const guestBookRouter = require("./routes/guestBook");
+
 
 
 app.set('views', path.join(__dirname, 'views'));
@@ -28,7 +31,9 @@ app.use(session({
 app.use("/", main);
 
 app.use('/notice', noticeRouter);
-// app.use('/board', boardRoter);
+app.use('/guestPlace', guestPlaceRouter);   //방명록 장소등록
+app.use('/guestBook', guestBookRouter);     //방명록
+
 // app.use('/friend', friendRouter);
 // app.use('/chat', chatRouter);
 

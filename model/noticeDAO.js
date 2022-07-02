@@ -51,7 +51,7 @@ const noticeRead = (parameters) =>{
 // }
 
 
-const noticeWrite = (parameters) =>{
+const noticeCreate = (parameters) =>{
     return new Promise((resolve, reject) =>{
         db.query(`INSERT INTO notice (user_key, title, img, content, type) values(?, ?, ?, ?, ?);`, [parameters.user_key, parameters.title, parameters.img, parameters.content, parameters.type], (err, db_data) => {
             if(err) {
@@ -97,7 +97,7 @@ module.exports = {
     // noticeList,
     noticeSearch,
     noticeRead,
-    noticeWrite,
+    noticeCreate,
     noticeUpdate,
     noticeDelete
 
