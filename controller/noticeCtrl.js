@@ -71,11 +71,10 @@ const postNoticeCreate = async (req, res) => {
         title: req.body.title,
         content: req.body.content,
         type: req.body.type,
-        img: (imgFile != undefined) ? true : false
+        img: (imgFile.originalname).split('.')[1]
     }
 
     console.log(parameters);
-
 
     try {
         const db_data = await noticeDAO.noticeCreate(parameters);
@@ -97,7 +96,6 @@ const postNoticeCreate = async (req, res) => {
 
         } else res.send("create success");
 
-        // 알림 추가
     } catch (err) {
         console.log(err);
     }
@@ -131,21 +129,11 @@ const noticeDelete = async (req, res) => {
         notice_key: req.body.notice_key,
         img: req.body.img
     }
-    console.log(parameters);
     try {
         await noticeDAO.noticeDelete(parameters);
-        if (parameters.img == 'true'){
-            fs.unlink(`public/images/notice/${parameters.notice_key}.jpg`, function(err){
-                console.log("image delete");
-            })
-            fs.unlink(`public/images/notice/${parameters.notice_key}.png`, function(err){
-                console.log("image delete");
-            })
-            fs.unlink(`public/images/notice/${parameters.notice_key}.gif`, function(err){
-                console.log("image delete");
-            })
-        }
-        res.send("delete success");
+        fs.unlink(`public/images/notice/${parameters.notice_key}.${parameters.img}`, function(err){
+            res.send("Delete success");
+        })
     } catch (err) {
         console.log(err);
     }

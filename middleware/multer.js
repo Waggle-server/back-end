@@ -17,34 +17,21 @@ const fileFilter = (req, file, cb) => {
   };
 
 
-const noticeUpload = multer({
-    storage: multer.diskStorage({
-        // 폴더위치
-        destination(req, file, done) {
-            done(null, 'public/images/notice');
-        },
-        filename: (req, file, done) => {
-            const fileName = file.originalname;
-            done(null, fileName);
-        },
-    }),
-    fileFilter: fileFilter
-})
-
-
-const gpUpload = multer({
-  storage: multer.diskStorage({
-      // 폴더위치
-      destination(req, file, done) {
-          done(null, 'public/images/guestPlace');
-      },
-      filename: (req, file, done) => {
-          const fileName = file.originalname;
-          done(null, fileName);
-      },
-  }),
-  fileFilter: fileFilter
-})
+const upload = (dir) =>{
+    return multer ({
+        storage: multer.diskStorage({
+            // 폴더위치
+            destination(req, file, done) {
+                done(null, `public/images/${dir}`);
+            },
+            filename: (req, file, done) => {
+                const fileName = file.originalname;
+                done(null, fileName);
+            },
+        }),
+        fileFilter: fileFilter
+    })
+}  
 
 const imgRename = function(imgFile, key) {
     let img = {
@@ -57,7 +44,6 @@ const imgRename = function(imgFile, key) {
 
 
 module.exports = {
-    noticeUpload,
-    gpUpload,
+    upload,
     imgRename
 }

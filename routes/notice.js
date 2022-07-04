@@ -3,8 +3,7 @@ const router = express.Router();
 
 const noticeCtrl = require('../controller/noticeCtrl');
 
-const { noticeUpload } = require("../middleware/multer");
-
+const multer  = require("../middleware/multer");
 
 // ?search={검색어}
 router.get('/', noticeCtrl.noticeList);
@@ -17,7 +16,7 @@ router.get('/read/:num', noticeCtrl.noticeRead);
 
 router.get('/create', noticeCtrl.getNoticeCreate);
 router.post('/create', 
-    noticeUpload.single('img'),
+    multer.upload('notice').single('img'),
     noticeCtrl.postNoticeCreate
 );
 
