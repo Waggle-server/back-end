@@ -71,7 +71,7 @@ const postNoticeCreate = async (req, res) => {
         title: req.body.title,
         content: req.body.content,
         type: req.body.type,
-        img: (imgFile.originalname).split('.')[1]
+        img: (imgFile != undefined) ? (imgFile.originalname).split('.')[1] : undefined
     }
 
     console.log(parameters);
@@ -86,7 +86,7 @@ const postNoticeCreate = async (req, res) => {
 
             const img = imgRename(imgFile, notice_key);
 
-            await fs.rename(`${img.dir}/${imgFile.originalname}`, `${img.dir}/${img.name}`, (err)=>{
+            fs.rename(`${img.dir}/${imgFile.originalname}`, `${img.dir}/${img.name}`, (err)=>{
                 if(err){
                     throw err;
                 } else{

@@ -19,6 +19,8 @@ router.post('/create',
     guestPlaceCtrl.gpCreate
 );
 
+router.post('/update/heart', guestPlaceCtrl.gpHeart);
+
 router.post('/delete', guestPlaceCtrl.gpDelete)
 
 

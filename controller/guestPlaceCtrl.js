@@ -30,7 +30,7 @@ const gpSearch = async (req, res) => {
 
 const gpRead = async (req, res) => {
     const parameters = {
-        place_key: req.params.num
+        gp_key: req.params.num
     }
     try {
         const db_data = await guestPlaceDAO.gpRead(parameters);
@@ -56,16 +56,15 @@ const gpCreate = async (req, res) => {
     console.log(parameters);
 
     try {
-        const db_data = await guestPlaceDAO.gpCreate(parameters);
-        const place_key = db_data.insertId
-
-
         // 선 - 이미지 업로드, 후 - key값으로 rename
         if(imgFile != undefined){
 
-            const img = imgRename(imgFile, place_key);
+            const db_data = await guestPlaceDAO.gpCreate(parameters);
+            const gp_key = db_data.insertId
 
-            await fs.rename(`${img.dir}/${imgFile.originalname}`, `${img.dir}/${img.name}`, (err)=>{
+            const img = imgRename(imgFile, gp_key);
+
+            fs.rename(`${img.dir}/${imgFile.originalname}`, `${img.dir}/${img.name}`, (err)=>{
                 if(err){
                     throw err;
                 } else{
@@ -73,23 +72,47 @@ const gpCreate = async (req, res) => {
                 }
             })
 
-        } else res.send("create success");
+        } else res.send("error 이미지 업로드 필수");
 
     } catch (err) {
         console.log(err);
     }
 }
 
+
+
 const gpDelete = async (req, res) => {
     const parameters = {
-        place_key: req.body.place_key,
+        gp_key: req.body.gp_key,
         img: req.body.img
     }
     try {
         await guestPlaceDAO.gpDelete(parameters);
-        fs.unlink(`public/images/guestPlace/${parameters.place_key}.${parameters.img}`, function(err){
+        fs.unlink(`public/images/guestPlace/${parameters.gp_key}.${parameters.img}`, function(err){
             res.send("Delete success");
         })
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
+
+const gpHeart = async (req, res) => {
+    const parameters = {
+        gp_key: req.body.gp_key,
+        user_key: req.body.user_key,
+    }
+    console.log(req.body)
+    try {
+        db_data = await guestPlaceDAO.gpHeart_check(parameters);
+        if(db_data.length == 0){
+            await guestPlaceDAO.gpHeart_insert(parameters);
+        } else{
+            await guestPlaceDAO.gpHeart_update(parameters);
+        }
+
+        res.send("heart change");
     } catch (err) {
         console.log(err);
     }
@@ -100,5 +123,7 @@ module.exports = {
     gpSearch,
     gpRead,
     gpCreate,
-    gpDelete
+    gpDelete,
+
+    gpHeart
 }
