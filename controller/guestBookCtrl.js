@@ -1,21 +1,10 @@
 const guestBookDAO = require('../model/guestBookDAO');
 
 const fs = require('fs');
-const {imgRename} = require('../middleware/multer');
+const { imgRename } = require('../middleware/multer');
+const { paging } = require('./tool/paging');
 
 
-const paging = (currentPage, pageSize) => {
-    const default_start_page = 0;
-    const page_size = pageSize;
-    if (currentPage < 0 || !currentPage) currentPage = default_start_page;
-
-    let result = {
-        offset: (currentPage) * page_size,
-        limit: Number(page_size)
-    }
-
-    return result;
-}
 
 // 메인화면, 검색 - 10개씩 스크롤 페이징
 const gbSearch = async (req, res) => {
@@ -24,7 +13,7 @@ const gbSearch = async (req, res) => {
     const page = paging(currentPage, pageSize);
 
     const parameters = {
-        place: (req.query.place == undefined) ? "" : req.query.place,
+        search: (req.query.search == undefined) ? "" : req.query.search,
         offset: page.offset,
         limit: page.limit
     }

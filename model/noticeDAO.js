@@ -16,7 +16,10 @@ const noticeList = (parameters) =>{
 
 const noticeSearch = (parameters) =>{
     return new Promise((resolve, reject) =>{
-        db.query(`SELECT notice_key, nickname, title, content, date FROM notice LEFT JOIN user ON notice.user_key=user.user_key WHERE (type='${parameters.type1}' OR type='${parameters.type2}') AND (title like '%${parameters.search}%' OR content like '%${parameters.search}%');`, (err, db_data) => {
+        db.query(`SELECT notice_key, nickname, title, content, notice.img, date FROM notice 
+        LEFT JOIN user ON notice.user_key=user.user_key
+        WHERE (type=? OR type=?) AND (title like ? OR content like ?)
+        LIMIT ?, ?;`, [`${parameters.type1}`, parameters.type2, `%${parameters.search}%`, `%${parameters.search}%`, parameters.offset, parameters.limit], (err, db_data) => {
             if(err) {
                 reject(err);
             } else {

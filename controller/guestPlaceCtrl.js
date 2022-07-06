@@ -17,7 +17,7 @@ const gpRank = async (req, res) => {
 // 검색
 const gpSearch = async (req, res) => {
     const parameters = {
-        search: req.params.search
+        search: (req.query.search == undefined) ? "" : req.query.search
     }
     try {
         const db_data = await guestPlaceDAO.gpSearch(parameters);

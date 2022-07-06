@@ -15,10 +15,10 @@ const multer  = require("../middleware/multer");
 // ?=search & page
 router.get('/search', guestBookCtrl.gbSearch);
 
-router.get('/read/list/:num', guestBookCtrl.gbList);    //num: gp_key
-router.get('/read/mylist/:num', guestBookCtrl.gbMyList);  //num: user_Key
+router.get('/read/list/:num', guestBookCtrl.gbList);       //num: gp_key
+router.get('/read/myList/:num', guestBookCtrl.gbMyList);   //num: user_Key
 
-router.get('/read/:num', guestBookCtrl.gbRead);
+router.get('/read/:num', guestBookCtrl.gbRead);            //num: gb_key
 
 
 router.post('/create', 

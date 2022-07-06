@@ -5,9 +5,10 @@ const noticeCtrl = require('../controller/noticeCtrl');
 
 const multer  = require("../middleware/multer");
 
-// ?search={검색어}
+// ?search={검색어} &page
 router.get('/', noticeCtrl.noticeList);
 router.get('/qna', noticeCtrl.qnaList);
+
 router.get('/read/:num', noticeCtrl.noticeRead);
 
 

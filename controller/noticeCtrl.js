@@ -2,19 +2,24 @@ const noticeDAO = require('../model/noticeDAO');
 
 const fs = require('fs');
 const {imgRename} = require('../middleware/multer');
+const { paging } = require('./tool/paging');
+
 
 
 // 공지사항
 // type [0: 시스템 공지, 1: 이벤트 공지]
 const noticeList = async (req, res) => {
-    let search = req.query.search;
-
-    if(search === undefined) search = "";
+    
+    let currentPage = req.query.page;
+    const pageSize = 10;
+    const page = paging(currentPage, pageSize);
 
     const parameters = {
-        search,
+        search: (req.query.search == undefined) ? "" : req.query.search,
         type1: 0,
-        type2: 1
+        type2: 1,
+        offset: page.offset,
+        limit: page.limit
     }
     
     try {
@@ -35,7 +40,7 @@ const qnaList = async (req, res) => {
     const parameters = {
         search,
         type1: 5,
-        type2: ''
+        type2: 5
     }
     
     try {

@@ -9,7 +9,8 @@ const multer  = require("../middleware/multer");
 
 
 router.get('/rank', guestPlaceCtrl.gpRank);
-router.get('/search/:search', guestPlaceCtrl.gpSearch);
+
+router.get('/search', guestPlaceCtrl.gpSearch);
 
 router.get('/read/:num', guestPlaceCtrl.gpRead);
 

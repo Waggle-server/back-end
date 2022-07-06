@@ -6,8 +6,8 @@ const gbSearch = (parameters) =>{
         db.query(
             `SELECT guestBook.gb_key, guestBook.gp_key, place, guestBook.img FROM guestBook
             LEFT JOIN guestPlace ON guestPlace.gp_key=guestBook.gp_key
-            WHERE place LIKE ?
-            ORDER BY date_update DESC LIMIT ?, ?;`,[`%${parameters.place}%`, parameters.offset, parameters.limit], (err, db_data) => {
+            WHERE (place LIKE ?) AND (guestBook.img IS NOT NULL)
+            ORDER BY date_update DESC LIMIT ?, ?;`,[`%${parameters.search}%`, parameters.offset, parameters.limit], (err, db_data) => {
             if(err) {
                 reject(err);
             } else {
