@@ -6,50 +6,36 @@ const { paging } = require('./tool/paging');
 
 
 
-// 공지사항
-// type [0: 시스템 공지, 1: 이벤트 공지]
-const noticeList = async (req, res) => {
+
+
+
+// 공지사항 & 문의사항
+// type [0: 시스템 공지, 1: 이벤트 공지, 5: 사용자 문의사항]
+const noticeList = (type1, type2) =>{
+    return async (req, res) => {
     
-    let currentPage = req.query.page;
-    const pageSize = 10;
-    const page = paging(currentPage, pageSize);
-
-    const parameters = {
-        search: (req.query.search == undefined) ? "" : req.query.search,
-        type1: 0,
-        type2: 1,
-        offset: page.offset,
-        limit: page.limit
-    }
+        let currentPage = req.query.page;
+        const pageSize = 10;
+        const page = paging(currentPage, pageSize);
     
-    try {
-        const db_data = await noticeDAO.noticeSearch(parameters);
-        res.send({result : db_data});
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-// 문의사항
-// type [5: 사용자 문의사항]
-const qnaList = async (req, res) => {
-    let search = req.query.search;
-
-    if(search === undefined) search = "";
-
-    const parameters = {
-        search,
-        type1: 5,
-        type2: 5
-    }
+        const parameters = {
+            search: (req.query.search == undefined) ? "" : req.query.search,
+            type1,
+            type2,
+            offset: page.offset,
+            limit: page.limit
+        }
     
-    try {
-        const db_data = await noticeDAO.noticeSearch(parameters);
-        res.send({result : db_data});
-    } catch (err) {
-        console.log(err);
+        console.log(parameters);
+        
+        try {
+            const db_data = await noticeDAO.noticeSearch(parameters);
+            res.send({result : db_data});
+        } catch (err) {
+            console.log(err);
+        }
     }
-}
+} 
 
 const noticeRead = async (req, res) => {
     const parameters = {
@@ -79,6 +65,7 @@ const postNoticeCreate = async (req, res) => {
         img: (imgFile != undefined) ? (imgFile.originalname).split('.')[1] : undefined
     }
 
+    console.log(imgFile);
     console.log(parameters);
 
     try {
@@ -153,5 +140,5 @@ module.exports = {
     postNoticeUpdate,
     noticeDelete,
 
-    qnaList
+    //qnaList
 }

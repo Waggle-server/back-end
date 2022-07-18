@@ -1,7 +1,6 @@
 {
-  "name": "waggle",
+  "name": "wagle",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.27.2",
     "body-parser": "^1.20.0",
     "dotenv": "^16.0.1",
     "ejs": "^3.1.8",
@@ -20,8 +20,18 @@
     "nodemon": "^2.0.16",
     "passport": "^0.6.0",
     "passport-kakao": "^1.0.1",
-    "session": "^0.1.0",
-    "session-file-store": "^1.5.0",
     "socket.io": "^4.5.1"
-  }
+  },
+  "bin": {
+    "wagle": "bin/www.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Waggle-server/back-end.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Waggle-server/back-end/issues"
+  },
+  "homepage": "https://github.com/Waggle-server/back-end#readme",
+  "description": ""
 }

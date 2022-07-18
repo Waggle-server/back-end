@@ -28,6 +28,7 @@ const gbSearch = async (req, res) => {
     }
 }
 
+
 const gbRead = async (req, res) => {
     const parameters = {
         gb_key: req.params.num

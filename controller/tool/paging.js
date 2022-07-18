@@ -14,4 +14,4 @@ const paging = (currentPage, pageSize) => {
 
 module.exports = {
     paging
-}
+}   

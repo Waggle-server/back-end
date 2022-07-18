@@ -1,7 +1,7 @@
 "use strict";
 
 const mysql = require('mysql');
-require('dotenv').config({ path: '.env'});
+require('dotenv').config({ path: 'wagle.env'});
 
 const dbOption = {
     host: process.env.HOST,

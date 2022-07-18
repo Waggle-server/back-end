@@ -5,11 +5,15 @@ const noticeCtrl = require('../controller/noticeCtrl');
 
 const multer  = require("../middleware/multer");
 
+
+
 // ?search={검색어} &page
-router.get('/', noticeCtrl.noticeList);
-router.get('/qna', noticeCtrl.qnaList);
+router.get('/', noticeCtrl.noticeList(0, 1));
+router.get('/qna', noticeCtrl.noticeList(5, 5));
 
 router.get('/read/:num', noticeCtrl.noticeRead);
+
+
 
 
 // get - 관리자페이지 view
@@ -29,3 +33,4 @@ router.post('/delete', noticeCtrl.noticeDelete);
 
 
 module.exports = router;
+

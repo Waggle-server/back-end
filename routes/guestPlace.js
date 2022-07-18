@@ -10,6 +10,7 @@ const multer  = require("../middleware/multer");
 
 router.get('/rank', guestPlaceCtrl.gpRank);
 
+// ?search=
 router.get('/search', guestPlaceCtrl.gpSearch);
 
 router.get('/read/:num', guestPlaceCtrl.gpRead);
@@ -26,3 +27,4 @@ router.post('/delete', guestPlaceCtrl.gpDelete)
 
 
 module.exports = router;
+

@@ -69,11 +69,11 @@ const gpSearch = (parameters) =>{
     return new Promise((resolve, reject) =>{
         db.query(
             `SELECT guestPlace.gp_key, place, img, SUM(heart) AS heart FROM
-            guestPlace left join guestPlace_heart on guestPlace.gp_key=guestPlace_heart.gp_key
-            WHERE (accept=true AND place LIKE '%${parameters.search}%')
+            guestPlace LEFT JOIN guestPlace_heart ON guestPlace.gp_key=guestPlace_heart.gp_key
+            WHERE (accept=true AND place LIKE ?)
             GROUP BY guestPlace.gp_key
             ORDER BY heart DESC
-            LIMIT 5; `, (err, db_data) => {
+            LIMIT 5;`, [`%${parameters.search}%`], (err, db_data) => {
             if(err) {
                 reject(err);
             } else {

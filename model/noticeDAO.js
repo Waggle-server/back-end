@@ -16,7 +16,7 @@ const noticeList = (parameters) =>{
 
 const noticeSearch = (parameters) =>{
     return new Promise((resolve, reject) =>{
-        db.query(`SELECT notice_key, nickname, title, content, notice.img, date FROM notice 
+        db.query(`SELECT notice_key, nickname, title, content, notice.img, DATE_FORMAT(date, '%Y-%m-%d %H:%i') as date FROM notice 
         LEFT JOIN user ON notice.user_key=user.user_key
         WHERE (type=? OR type=?) AND (title like ? OR content like ?)
         LIMIT ?, ?;`, [`${parameters.type1}`, parameters.type2, `%${parameters.search}%`, `%${parameters.search}%`, parameters.offset, parameters.limit], (err, db_data) => {
@@ -31,7 +31,7 @@ const noticeSearch = (parameters) =>{
 
 const noticeRead = (parameters) =>{
     return new Promise((resolve, reject) =>{
-        db.query(`SELECT notice.*, nickname FROM notice LEFT JOIN user ON notice.user_key=user.user_key WHERE notice_key=?;`, [parameters.notice_key], (err, db_data) => {
+        db.query(`SELECT notice.*, DATE_FORMAT(date, '%Y-%m-%d %H:%i') as date, DATE_FORMAT(date_update, '%Y-%m-%d %H:%i') as date_update, nickname FROM notice LEFT JOIN user ON notice.user_key=user.user_key WHERE notice_key=?;`, [parameters.notice_key], (err, db_data) => {
             if(err) {
                 reject(err);
             } else {
