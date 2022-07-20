@@ -2,12 +2,15 @@
 
 const express = require('express');
 const app = express();
+
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
+const {sessionStore} = require('./config/dbconn');
 
 const fs = require('fs');
 const path = require('path');
 
+
+const userRouter = require('./routes/user')
 
 const noticeRouter = require("./routes/notice");
 const guestPlaceRouter = require("./routes/guestPlace");
@@ -28,10 +31,22 @@ app.set('view engine', 'ejs');
 
 app.use('/public', express.static(__dirname +'/public'));
 
+app.use(session({
+    secret: process.env.SECRET_KEY, // 암호화
+    resave: false,                  // 세션을 언제나 저장
+    saveUninitialized: true,        // 세션이 저장되기 전 uninitialized 상태로 미리 만들어 저장
+    store: sessionStore,
+    cookie: {
+        maxAgeL: 1000 * 60 * 60
+    }
+}));
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
+app.use('/user', userRouter);
 
 
 app.use('/notice', noticeRouter);

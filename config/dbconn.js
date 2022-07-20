@@ -3,6 +3,9 @@
 const mysql = require('mysql');
 require('dotenv').config({ path: 'wagle.env'});
 
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+
 const dbOption = {
     host: process.env.HOST,
     port: process.env.DB_PORT,
@@ -14,6 +17,11 @@ const dbOption = {
 
 const db = mysql.createConnection(dbOption);
 
+const sessionStore = new MySQLStore(dbOption);
+
 db.connect();
 
-module.exports = db;    
+module.exports = {
+    db,
+    sessionStore
+}
