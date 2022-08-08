@@ -4,7 +4,10 @@ const {db} = require('../config/dbconn');
 const gbSearch = (parameters) =>{
     return new Promise((resolve, reject) =>{
         db.query(
-            `SELECT guestBook.gb_key, guestBook.gp_key, place, guestBook.img FROM guestBook
+            `SELECT guestBook.gb_key, guestBook.gp_key, place, guestBook.img,
+            (SELECT nickname FROM user WHERE user.user_key = guestBook.user_key) AS nickname,
+            (SELECT SUM(heart) FROM guestBook_heart WHERE gb_key = guestBook.gb_key) AS heart
+            FROM guestBook
             LEFT JOIN guestPlace ON guestPlace.gp_key=guestBook.gp_key
             WHERE (place LIKE ?) AND (guestBook.img IS NOT NULL)
             ORDER BY date_update DESC LIMIT ?, ?;`,[`%${parameters.search}%`, parameters.offset, parameters.limit], (err, db_data) => {

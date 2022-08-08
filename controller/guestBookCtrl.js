@@ -169,9 +169,9 @@ const gbHeart = async (req, res) => {
 
 module.exports = {
     gbSearch,
-    gbRead,
     gbList,
     gbMyList,
+    gbRead,
 
     gbCreate,
     gbUpdate,
