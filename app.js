@@ -15,6 +15,7 @@ const userRouter = require('./routes/user')
 const noticeRouter = require("./routes/notice");
 const guestPlaceRouter = require("./routes/guestPlace");
 const guestBookRouter = require("./routes/guestBook");
+const traceRouter = require("./routes/trace");
 
 const friendRouter = require("./routes/friendRouter");
 const chatRouter = require("./routes/chatRouter");
@@ -52,6 +53,7 @@ app.use('/user', userRouter);
 app.use('/notice', noticeRouter);
 app.use('/guestPlace', guestPlaceRouter);   //방명록 장소등록
 app.use('/guestBook', guestBookRouter);     //방명록
+app.use("/trace", traceRouter);
 
 app.use("/friend", friendRouter);
 app.use("/chat", chatRouter);

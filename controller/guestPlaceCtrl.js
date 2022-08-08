@@ -68,11 +68,11 @@ const gpCreate = async (req, res) => {
                 if(err){
                     throw err;
                 } else{
-                    res.send("img uploded\ncreate success");
+                    res.send({result: true});
                 }
             })
 
-        } else res.send("error 이미지 업로드 필수");
+        } else res.send({result: false});
 
     } catch (err) {
         console.log(err);
@@ -89,7 +89,7 @@ const gpDelete = async (req, res) => {
     try {
         await guestPlaceDAO.gpDelete(parameters);
         fs.unlink(`public/images/guestPlace/${parameters.gp_key}.${parameters.img}`, function(err){
-            res.send("Delete success");
+            res.send({result: true});
         })
     } catch (err) {
         console.log(err);
@@ -112,7 +112,7 @@ const gpHeart = async (req, res) => {
             await guestPlaceDAO.gpHeart_update(parameters);
         }
 
-        res.send("heart change");
+        res.send({result: true});
     } catch (err) {
         console.log(err);
     }

@@ -104,10 +104,10 @@ const gbCreate = async (req, res) => {
                 if(err){
                     throw err;
                 } else{
-                    res.send("img uploded\ncreate success");
+                    res.send({result: true});
                 }
             })
-        } else res.send("create success");
+        } else res.send({result: true});
 
     } catch (err) {
         console.log(err);
@@ -123,7 +123,7 @@ const gbUpdate = async (req, res) => {
     console.log(parameters);
     try {
         await guestBookDAO.gbUpdate(parameters);
-        res.send("update success");
+        res.send({result: true});
     } catch (err) {
         console.log(err);
     }
@@ -137,7 +137,7 @@ const gbDelete = async (req, res) => {
     try {
         await guestBookDAO.gbDelete(parameters);
         fs.unlink(`public/images/guestBook/${parameters.gb_key}.${parameters.img}`, function(err){
-            res.send("Delete success");
+            res.send({result: true});
         })
     } catch (err) {
         console.log(err);
@@ -159,7 +159,7 @@ const gbHeart = async (req, res) => {
             await guestBookDAO.gbHeart_update(parameters);
         }
 
-        res.send("heart change");
+        res.send({result: true});
     } catch (err) {
         console.log(err);
     }

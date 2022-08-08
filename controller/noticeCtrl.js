@@ -82,11 +82,11 @@ const postNoticeCreate = async (req, res) => {
                 if(err){
                     throw err;
                 } else{
-                    res.send("img uploded\ncreate success");
+                    res.send({result: true});
                 }
             })
 
-        } else res.send("create success");
+        } else res.send({result: true});
 
     } catch (err) {
         console.log(err);
@@ -110,7 +110,7 @@ const postNoticeUpdate = async (req, res) => {
     console.log(parameters);
     try {
         await noticeDAO.noticeUpdate(parameters);
-        res.send("update success");
+        res.send({result: true});
     } catch (err) {
         console.log(err);
     }
@@ -124,7 +124,7 @@ const noticeDelete = async (req, res) => {
     try {
         await noticeDAO.noticeDelete(parameters);
         fs.unlink(`public/images/notice/${parameters.notice_key}.${parameters.img}`, function(err){
-            res.send("Delete success");
+            res.send({result: true});
         })
     } catch (err) {
         console.log(err);
