@@ -1,4 +1,4 @@
-const db = require('../config/dbconn');
+const {db} = require('../config/dbconn');
 
 
 const gbSearch = (parameters) =>{

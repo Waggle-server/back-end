@@ -1,6 +1,7 @@
 "use strict";
 
-const db = require("../config/dbconn");
+const {db} = require('../config/dbconn');
+
 //채팅방 리스트
 function chat_listR(parameter) {
     return new Promise((resolve, reject) => {

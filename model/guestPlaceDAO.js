@@ -1,4 +1,4 @@
-const db = require('../config/dbconn');
+const {db} = require('../config/dbconn');
 
 
 // 승인 안된 것들이 위로, 오래된 순

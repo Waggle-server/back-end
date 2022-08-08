@@ -1,9 +1,9 @@
-const db = require('../config/dbconn');
+const {db} = require('../config/dbconn');
 
 
 const exist_id = (parameters) =>{
     return new Promise((resolve, reject) =>{
-        db.query(`SELECT * FROM user WHERE id=${parameters.id}`, (err, db_data) => {
+        db.query(`SELECT * FROM user WHERE id=?`, [parameters.id], (err, db_data) => {
             if(err) {
                 reject(err);
             } else {

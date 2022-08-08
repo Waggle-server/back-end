@@ -9,8 +9,8 @@ const MySQLStore = require('express-mysql-session')(session);
 const dbOption = {
     host: process.env.HOST,
     port: process.env.DB_PORT,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
     database: process.env.DATABASE,
     multipleStatements: true    // 다중쿼리문
 }
