@@ -1,4 +1,5 @@
 const guestBookDAO = require('../model/guestBookDAO');
+const logDAO = require('../model/logDAO');
 
 const fs = require('fs');
 const { imgRename } = require('../middleware/multer');
@@ -15,12 +16,19 @@ const gbSearch = async (req, res) => {
     const parameters = {
         search: (req.query.search == undefined) ? "" : req.query.search,
         offset: page.offset,
-        limit: page.limit
+        limit: page.limit,
+        user_key: req.session.user_key
     }
 
     console.log(parameters);
 
     try {
+        // 로그
+        if(parameters.search != "" && parameters.user_key != null){
+            parameters.log = parameters.search
+            await logDAO.search(parameters)
+        }
+
         const db_data = await guestBookDAO.gbSearch(parameters);
         res.send({result : db_data});
     } catch (err) {
