@@ -176,6 +176,20 @@ const gpHeart_update = (parameters) =>{
     })
 }
 
+const gpHeart_log = (parameters) =>{
+    return new Promise((resolve, reject) =>{
+        db.query(`SELECT place, guestPlace_heart.user_key AS user_key, heart FROM guestPlace
+        LEFT JOIN guestPlace_heart ON guestPlace.gp_key = guestPlace_heart.gp_key 
+        WHERE guestPlace_heart.user_key=? AND guestPlace_heart.gp_key=?;`, [parameters.user_key, parameters.gp_key], (err, db_data) => {
+            if(err) {
+                reject(err);
+            } else {
+                resolve(db_data);
+            }
+        })
+    })
+}
+
 
 
 
@@ -190,4 +204,5 @@ module.exports = {
     gpHeart_check,
     gpHeart_insert,
     gpHeart_update,
+    gpHeart_log
 }
