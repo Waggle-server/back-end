@@ -42,7 +42,17 @@ const gbRead = async (req, res) => {
         gb_key: req.params.num
     }
     try {
+        parameters.user_key = req.session.user_key
+
         const db_data = await guestBookDAO.gbRead(parameters);
+
+        // 로그
+        if(db_data.length != 0 && parameters.user_key != null){
+            parameters.log = db_data[0].place + "," + db_data[0].comment
+            
+            await logDAO.read(parameters)
+        }
+
         res.send({result : db_data});
     } catch (err) {
         console.log(err);
@@ -91,31 +101,45 @@ const gbMyList = async (req, res) => {
 const gbCreate = async (req, res) => {
     const imgFile = req.file;
 
-    const parameters = {
+    let parameters = {
         gp_key: req.body.gp_key,
-        user_key: req.body.user_key,
+        user_key: req.session.user_key,
         comment: req.body.comment,
         img: (imgFile != undefined) ? (imgFile.originalname).split('.')[1] : undefined
     }
     console.log(parameters);
 
     try {
-        const db_data = await guestBookDAO.gbCreate(parameters);
-        const gb_key = db_data.insertId
+        if(parameters.user_key != null){
+            // 선 - 이미지 업로드, 후 - key값으로 rename
+            if(imgFile != undefined){
+                let db_data = await guestBookDAO.gbCreate(parameters);
+                const gb_key = db_data.insertId
 
-        // 선 - 이미지 업로드, 후 - key값으로 rename
-        if(imgFile != undefined){
+                parameters.gb_key = gb_key
 
-            const img = imgRename(imgFile, gb_key);
+                const img = imgRename(imgFile, gb_key);
 
-            fs.rename(`${img.dir}/${imgFile.originalname}`, `${img.dir}/${img.name}`, (err)=>{
-                if(err){
-                    throw err;
-                } else{
-                    res.send({result: true});
-                }
-            })
-        } else res.send({result: true});
+                fs.rename(`${img.dir}/${imgFile.originalname}`, `${img.dir}/${img.name}`, async (err)=>{
+                    if(err){
+                        console.log(err)
+                        res.send({result: "img upload err"});
+                    } else{
+                        // 로그
+                        db_data = await guestBookDAO.gbRead(parameters)
+                        parameters.log = db_data[0].place + "," + parameters.comment
+                        await logDAO.create(parameters)
+
+                        res.send({result: "success"});
+                    }
+                })
+            } else {
+                res.send({result: "img null"});
+            } 
+        } else {
+            res.send({result: "user null"});
+        }
+        
 
     } catch (err) {
         console.log(err);
@@ -156,22 +180,35 @@ const gbDelete = async (req, res) => {
 const gbHeart = async (req, res) => {
     const parameters = {
         gb_key: req.body.gb_key,
-        user_key: req.body.user_key,
+        user_key: req.session.user_key
     }
     console.log(req.body)
     try {
-        db_data = await guestBookDAO.gbHeart_check(parameters);
-        if(db_data.length == 0){
-            await guestBookDAO.gbHeart_insert(parameters);
-        } else{
-            await guestBookDAO.gbHeart_update(parameters);
-        }
+        if(parameters.user_key != null){
+            let db_data = await guestBookDAO.gbHeart_check(parameters);
+            if(db_data.length == 0){
+                await guestBookDAO.gbHeart_insert(parameters);
+            } else{
+                await guestBookDAO.gbHeart_update(parameters);
+            }
 
-        res.send({result: true});
+            // 로그
+            db_data = await guestBookDAO.gbHeart_log(parameters)
+            if(db_data[0].heart == 1){
+                parameters.log = db_data[0].place +","+ db_data[0].comment
+                await logDAO.heart(parameters)
+            }
+            res.send({result: "success"});
+        } else{
+            res.send({result: "user null"});
+        }
+        
     } catch (err) {
         console.log(err);
     }
 }
+
+
 
 
 
@@ -185,5 +222,5 @@ module.exports = {
     gbUpdate,
     gbDelete,
 
-    gbHeart
+    gbHeart,
 }

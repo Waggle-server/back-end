@@ -161,6 +161,20 @@ const gbHeart_update = (parameters) =>{
     })
 }
 
+const gbHeart_log = (parameters) =>{
+    return new Promise((resolve, reject) =>{
+        db.query(`SELECT (SELECT place FROM guestPlace WHERE guestPlace.gp_key = guestBook.gp_key) AS place, comment, guestBook_heart.user_key AS user_key, heart FROM guestBook
+        LEFT JOIN guestBook_heart ON guestBook.gb_key = guestBook_heart.gb_key 
+        WHERE guestBook_heart.user_key=? AND guestBook_heart.gb_key=?;`, [parameters.user_key, parameters.gb_key], (err, db_data) => {
+            if(err) {
+                reject(err);
+            } else {
+                resolve(db_data);
+            }
+        })
+    })
+}
+
 
 module.exports = {
     gbSearch,
@@ -174,5 +188,6 @@ module.exports = {
 
     gbHeart_check,
     gbHeart_insert,
-    gbHeart_update
+    gbHeart_update,
+    gbHeart_log
 }

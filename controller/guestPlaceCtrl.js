@@ -143,10 +143,9 @@ const gpHeart = async (req, res) => {
                 await guestPlaceDAO.gpHeart_update(parameters);
             }
 
+            // 로그
             db_data = await guestPlaceDAO.gpHeart_log(parameters)
-
             if(db_data[0].heart == 1){
-                // 로그
                 parameters.log = db_data[0].place
                 await logDAO.heart(parameters)
             }
