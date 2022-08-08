@@ -18,6 +18,13 @@ const guestBookRouter = require("./routes/guestBook");
 const traceRouter = require("./routes/trace");
 
 
+const friendRouter = require("./routes/friendRouter");
+const chatRouter = require("./routes/chatRouter");
+const accompanyRouter = require("./routes/accompanyRouter");
+const pairRouter = require("./routes/pairRouter");
+const alarmRouter = require("./routes/alarmRouter");
+
+
 const adminRouter = require("./routes/admin");
 
 
@@ -52,6 +59,13 @@ app.use('/guestPlace', guestPlaceRouter);   //방명록 장소등록
 app.use('/guestBook', guestBookRouter);     //방명록
 app.use("/trace", traceRouter);
 
+
+
+app.use("/friend", friendRouter);
+app.use("/chat", chatRouter);
+app.use("/accompany", accompanyRouter);
+app.use("/pair", pairRouter);
+app.use("/alarm", alarmRouter);
 
 
 
