@@ -34,9 +34,14 @@ async function accompany_main(req, res, next) {
         const real_time_data = real_time_upload_post;
         const closing_data = closing_post;
 
+        const personnel = await accompanyDAO.check_personnel(post_key);
+        const close_personnel = await accompanyDAO.check_close_personnel(post_key);
+        const personnel_data = { personnel, close_personnel };
+
         res.json({
             "real_time_data": real_time_data,
-            "closing_data": closing_data
+            "closing_data": closing_data,
+            "personnel_data": personnel_data
         })
     } catch (err) {
         res.send("메인 페이지 오류")
@@ -64,7 +69,7 @@ async function companionPost_create(req, res, next) {
             const tag_data = await accompanyDAO.insert_tag(tag_parameter);
         };
 
-        res.send("success");
+        res.send({ result: post_key });
     } catch (err) {
         console.log(err)
         res.send("게시글 업로드 오류");
@@ -156,7 +161,7 @@ async function companionPost_read(req, res, next) {
     }
 }
 
-async function companionPost_read_A(req, res, next) {
+async function companionPost_read_A_real_time(req, res, next) {
     try {
         let currentPage = req.query.page;
         const pageSize = 10;
@@ -167,9 +172,38 @@ async function companionPost_read_A(req, res, next) {
             limit: page.limit
         }
 
-        const db_data = await accompanyDAO.companion_postR_A(parameter);
+        const db_data = await accompanyDAO.companion_postR_A_real_time(parameter);
+        const personnel = await accompanyDAO.check_personnel(post_key);
+        const close_personnel = await accompanyDAO.check_close_personnel(post_key);
+        const personnel_data = { personnel, close_personnel };
+
         res.json({
-            "db_data": db_data
+            "db_data": db_data,
+            "personnel_data": personnel_data
+        });
+    } catch (err) {
+        res.send("읽어올 수 없습니다.");
+    }
+}
+
+async function companionPost_read_A_closing(req, res, next) {
+    try {
+        let currentPage = req.query.page;
+        const pageSize = 10;
+        const page = paging(currentPage, pageSize);
+
+        const parameter = {
+            offset: page.offset,
+            limit: page.limit
+        }
+
+        const db_data = await accompanyDAO.companion_postR_A_closing(parameter);
+        const personnel = await accompanyDAO.check_personnel(post_key);
+        const close_personnel = await accompanyDAO.check_close_personnel(post_key);
+        const personnel_data = { personnel, close_personnel };
+        res.json({
+            "db_data": db_data,
+            "personnel_data": personnel_data
         });
     } catch (err) {
         res.send("읽어올 수 없습니다.");
@@ -264,22 +298,6 @@ async function companionPost_Deadline_Btn(req, res, next) {
     }
 }
 
-//마감 인원 보여주기
-async function closing_people(req, res, next) {
-    try {
-        const post_key = req.params.post_key;
-        const personnel = await accompanyDAO.check_personnel(post_key);
-        const close_personnel = await accompanyDAO.check_close_personnel(post_key);
-        const db_data = { personnel, close_personnel };
-
-        res.json({
-            "db_data": db_data
-        })
-    } catch (err) {
-        res.send("마감 인원 불러오기 오류");
-    }
-}
-
 //채팅방 (게시글에서 확인버튼을 눌렀을 때) - 유저버전
 async function companionPost_createChat(req, res, next) {
     try {
@@ -301,11 +319,11 @@ module.exports = {
     companionPost_update,
     companionPost_delete,
     companionPost_read,
-    companionPost_read_A,
+    companionPost_read_A_real_time,
+    companionPost_read_A_closing,
     profile_detail,
     companionPost_search_user,
     companionPost_search_area,
     companionPost_Deadline_Btn,
-    closing_people,
     companionPost_createChat
 }

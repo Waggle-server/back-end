@@ -14,8 +14,10 @@ router.post('/companionPostU/:post_key', accompany_ctrl.companionPost_update);
 router.post('/companionPostD/:post_key/:user_key', accompany_ctrl.companionPost_delete);
 //하나의 동행 게시글 눌렀을 때o
 router.get('/companionPostR/:post_key', accompany_ctrl.companionPost_read);
-//동행 게시글 전체 보기o
-router.get('/companionPostR_A', accompany_ctrl.companionPost_read_A);
+//동행 게시글 전체 보기(실시간 업로드 글)o
+router.get('/companionPostR_A_real_time', accompany_ctrl.companionPost_read_A_real_time);
+//동행 게시글 전체 보기(실시간 업로드 글)o
+router.get('/companionPostR_A_closing', accompany_ctrl.companionPost_read_A_closing);
 
 
 //호스트가 게시글을 올리자마자 채팅방 입장
@@ -28,10 +30,7 @@ router.get('/companionPost_search_user', accompany_ctrl.companionPost_search_use
 router.get('/companionPost_search_area', accompany_ctrl.companionPost_search_area);
 //동행 게시글 마감하기 눌렀을 때 짝궁 리스트 업 & deadline DB=1로 update o
 router.post('/companionDeadline_Btn/:post_key/:user_key', accompany_ctrl.companionPost_Deadline_Btn);
-//동행 마감 인원o
-router.get('/closing_people/:post_key', accompany_ctrl.closing_people);
-//동행 채팅 참여 눌렀을 때 보여지는 화면과 socket 통신o 
-//AND 채팅방 추방시키기 x
+//동행 채팅 참여 눌렀을 때 보여지는 화면과 socket 통신o, 사용자 내보내기x
 router.get('/companionPostC_chat/:post_key/:user_key', accompany_ctrl.companionPost_createChat);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 "use strict";
-const {db} = require('../config/dbconn');
+
+const {db} = require("../config/dbconn");
 
 function companion_postC(parameter) {
     return new Promise((resolve, reject) => {
@@ -100,7 +101,7 @@ function companion_postD(parameter) {
 function read_upload_post(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
-        const queryData = `SELECT post_key, accompany.user_key, nickname, img, title FROM accompany LEFT OUTER JOIN user ON accompany.user_key = user.user_key ORDER BY date_update DESC LIMIT ?, ?`;
+        const queryData = `SELECT post_key, accompany.user_key, nickname, img, title, date_update FROM accompany LEFT OUTER JOIN user ON accompany.user_key = user.user_key ORDER BY date_update DESC LIMIT ?, ?`;
         db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
             console.log(db_data);
             if(db_data) resolve(db_data);
@@ -112,7 +113,7 @@ function read_upload_post(parameter) {
 function read_closing_post(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
-        const queryData = `SELECT post_key, accompany.user_key, nickname, img, title FROM accompany LEFT OUTER JOIN user ON accompany.user_key = user.user_key ORDER BY date_update ASC LIMIT ?, ?`;
+        const queryData = `SELECT post_key, accompany.user_key, nickname, img, title, date_update FROM accompany LEFT OUTER JOIN user ON accompany.user_key = user.user_key ORDER BY date_update ASC LIMIT ?, ?`;
         db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
             console.log(db_data);
             if(db_data) resolve(db_data);
@@ -132,9 +133,20 @@ function companion_postR(parameter) {
     });
 }
 
-function companion_postR_A(parameter) {
+function companion_postR_A_real_time(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, personnel, date_update FROM accompany LEFT OUTER JOIN user ON accompany.user_key = user.user_key LIMIT ?, ?`;
+        const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, personnel, date_update FROM accompany LEFT OUTER JOIN user ON accompany.user_key = user.user_key ORDER BY date_update DESC LIMIT ?, ?`;
+        db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
+            console.log(db_data);
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    });
+}
+
+function companion_postR_A_closing(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, personnel, date_update FROM accompany LEFT OUTER JOIN user ON accompany.user_key = user.user_key ORDER BY date_update ASC LIMIT ?, ?`;
         db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
             console.log(db_data);
             if(db_data) resolve(db_data);
@@ -229,7 +241,8 @@ module.exports = {
     read_upload_post,
     read_closing_post,
     companion_postR,
-    companion_postR_A,
+    companion_postR_A_real_time,
+    companion_postR_A_closing,
     companion_detail,
     companion_search_user,
     companion_search_area,
