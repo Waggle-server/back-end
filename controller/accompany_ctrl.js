@@ -32,14 +32,9 @@ async function accompany_main(req, res, next) {
         const real_time_data = real_time_upload_post;
         const closing_data = closing_post;
 
-        const personnel = await accompanyDAO.check_personnel(post_key);
-        const close_personnel = await accompanyDAO.check_close_personnel(post_key);
-        const personnel_data = { personnel, close_personnel };
-
         res.json({
             "real_time_data": real_time_data,
-            "closing_data": closing_data,
-            "personnel_data": personnel_data
+            "closing_data": closing_data
         })
     } catch (err) {
         res.send("메인 페이지 오류")
@@ -47,34 +42,25 @@ async function accompany_main(req, res, next) {
 }
 
 //추천 시스템
-async function accompany_main_suggest(req, res, next) {
-    try {
-        const user_key = req.body.user_key;
+// async function accompany_main_suggest(req, res, next) {
+//     try {
+//         // const user_key = req.params.user_key;
+//         const python_data = [7, 18, 23];
+//         const db_data = [];
 
-        //배열이라면
-        for(let i=0; i<user_key.length; i++) {
-            
-        }
+//         for(let i in python_data) {
+//             //사용자 동행 온도는 아직 SELECT 안함
+//             let data = await accompanyDAO.user_suggest(python_data[i]);
+//             db_data.push(data[0]);
+//         }
 
-        let currentPage = req.query.page;
-        const pageSize = 10;
-        const page = paging(currentPage, pageSize);
-
-        const parameter = {
-            user_key: user_key,
-            offset: page.offset,
-            limit: page.limit
-        }
-
-        //사용자 동행 온도는 아직 SELECT 안함
-        const db_data = await accompanyDAO.user_suggest(parameter);
-        res.json({
-            "db_data": db_data
-        });
-    } catch (err) {
-        res.send("추천 시스템 오류");
-    }
-}
+//         res.json({
+//             "db_data": db_data
+//         });
+//     } catch (err) {
+//         res.send("추천 시스템 오류");
+//     }
+// }
 
 async function companionPost_create(req, res, next) {
     try {
@@ -206,7 +192,8 @@ async function companionPost_read_A_real_time(req, res, next) {
             "db_data": db_data
         });
     } catch (err) {
-        res.send("읽어올 수 없습니다.");
+        console.log(err);
+        res.send(err);
     }
 }
 
@@ -337,7 +324,7 @@ async function companionPost_createChat(req, res, next) {
 
 module.exports = {
     accompany_main,
-    accompany_main_suggest,
+    // accompany_main_suggest,
     companionPost_create,
     host_accompany_chat,
     companionPost_update,
