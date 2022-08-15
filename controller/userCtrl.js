@@ -38,7 +38,7 @@ const userCheck = async (req, res) => {
 
     if(profile == null){
         console.log("잘못된 토큰");
-        res.send({result: false})
+        res.send({result: "Token error"})
     } else{
         let db_data = await userDAO.exist_id(profile);
 
@@ -53,9 +53,8 @@ const userCheck = async (req, res) => {
             res.send({result: false})
         }
     }
-
-    
 }
+
 
 const signUp  = async (req, res) => {
     const accessToken = req.get('accessToken');

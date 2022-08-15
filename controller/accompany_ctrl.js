@@ -17,8 +17,6 @@ const paging = (currentPage, pageSize) => {
 
 async function accompany_main(req, res, next) {
     try {
-        //추천 친구 추후에
-        //
         let currentPage = req.query.page;
         const pageSize = 3;
         const page = paging(currentPage, pageSize);
@@ -45,6 +43,36 @@ async function accompany_main(req, res, next) {
         })
     } catch (err) {
         res.send("메인 페이지 오류")
+    }
+}
+
+//추천 시스템
+async function accompany_main_suggest(req, res, next) {
+    try {
+        const user_key = req.body.user_key;
+
+        //배열이라면
+        for(let i=0; i<user_key.length; i++) {
+            
+        }
+
+        let currentPage = req.query.page;
+        const pageSize = 10;
+        const page = paging(currentPage, pageSize);
+
+        const parameter = {
+            user_key: user_key,
+            offset: page.offset,
+            limit: page.limit
+        }
+
+        //사용자 동행 온도는 아직 SELECT 안함
+        const db_data = await accompanyDAO.user_suggest(parameter);
+        res.json({
+            "db_data": db_data
+        });
+    } catch (err) {
+        res.send("추천 시스템 오류");
     }
 }
 
@@ -173,13 +201,9 @@ async function companionPost_read_A_real_time(req, res, next) {
         }
 
         const db_data = await accompanyDAO.companion_postR_A_real_time(parameter);
-        const personnel = await accompanyDAO.check_personnel(post_key);
-        const close_personnel = await accompanyDAO.check_close_personnel(post_key);
-        const personnel_data = { personnel, close_personnel };
 
         res.json({
-            "db_data": db_data,
-            "personnel_data": personnel_data
+            "db_data": db_data
         });
     } catch (err) {
         res.send("읽어올 수 없습니다.");
@@ -198,12 +222,9 @@ async function companionPost_read_A_closing(req, res, next) {
         }
 
         const db_data = await accompanyDAO.companion_postR_A_closing(parameter);
-        const personnel = await accompanyDAO.check_personnel(post_key);
-        const close_personnel = await accompanyDAO.check_close_personnel(post_key);
-        const personnel_data = { personnel, close_personnel };
+
         res.json({
-            "db_data": db_data,
-            "personnel_data": personnel_data
+            "db_data": db_data
         });
     } catch (err) {
         res.send("읽어올 수 없습니다.");
@@ -237,6 +258,7 @@ async function companionPost_search_user(req, res, next) {
         }
 
         const db_data = await accompanyDAO.companion_search_user(parameter);
+        
         res.json({
             "db_data": db_data
         });
@@ -258,6 +280,7 @@ async function companionPost_search_area(req, res, next) {
         }
 
         const db_data = await accompanyDAO.companion_search_area(parameter);
+        
         res.json({
             "db_data": db_data
         });
@@ -314,6 +337,7 @@ async function companionPost_createChat(req, res, next) {
 
 module.exports = {
     accompany_main,
+    accompany_main_suggest,
     companionPost_create,
     host_accompany_chat,
     companionPost_update,

@@ -4,7 +4,7 @@ const {db} = require('../config/dbconn');
 const gbSearch = (parameters) =>{
     return new Promise((resolve, reject) =>{
         db.query(
-            `SELECT guestBook.gb_key, guestBook.gp_key, place, guestBook.img,
+            `SELECT guestBook.gb_key, guestBook.gp_key, place, comment, guestBook.img,
             (SELECT nickname FROM user WHERE user.user_key = guestBook.user_key) AS nickname,
             (SELECT SUM(heart) FROM guestBook_heart WHERE gb_key = guestBook.gb_key) AS heart
             FROM guestBook
