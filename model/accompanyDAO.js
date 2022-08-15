@@ -1,12 +1,11 @@
 "use strict";
 
-const db = require("../config/dbconn");
+const {db} = require("../config/dbconn");
 
 function user_suggest(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `SELECT user_key, nickname, img, intro FROM user where user_key = ? LIMIT ?, ?`;
-        db.query(queryData, [parameter.user_key, parameter.offset, parameter.limit], (err, db_data) => {
-            console.log(db_data);
+        const queryData = `SELECT user_key, nickname, img, intro FROM user where user_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -112,7 +111,10 @@ function companion_postD(parameter) {
 function read_upload_post(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
-        const queryData = `SELECT post_key, accompany.user_key, nickname, img, title, date_update FROM accompany LEFT OUTER JOIN user ON accompany.user_key = user.user_key ORDER BY date_update DESC LIMIT ?, ?`;
+        const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
+                        (SELECT personnel FROM chat_list where accompany.post_key = chat_list.post_key) AS count_personnel, date_update
+                        FROM accompany
+                        LEFT OUTER JOIN user ON accompany.user_key = user.user_key ORDER BY date_update DESC LIMIT ?, ?`;
         db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
             console.log(db_data);
             if(db_data) resolve(db_data);
@@ -124,7 +126,10 @@ function read_upload_post(parameter) {
 function read_closing_post(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
-        const queryData = `SELECT post_key, accompany.user_key, nickname, img, title, date_update FROM accompany LEFT OUTER JOIN user ON accompany.user_key = user.user_key ORDER BY date_update ASC LIMIT ?, ?`;
+        const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
+                    (SELECT personnel FROM chat_list where accompany.post_key = chat_list.post_key) AS count_personnel, date_update
+                    FROM accompany
+                    LEFT OUTER JOIN user ON accompany.user_key = user.user_key ORDER BY date_update ASC LIMIT ?, ?`;
         db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
             console.log(db_data);
             if(db_data) resolve(db_data);

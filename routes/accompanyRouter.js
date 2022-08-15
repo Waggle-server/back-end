@@ -6,8 +6,8 @@ const accompany_ctrl = require("../controller/accompany_ctrl");
 
 //동행 메인o 
 router.get('/accompany_main', accompany_ctrl.accompany_main);
-//동행 메인 추천 시스템 (데이터 타입 알아야 함)
-router.get('/accompany_main_suggest', accompany_ctrl.accompany_main_suggest);
+//동행 메인 추천 시스템
+// router.get('/accompany_main_suggest', accompany_ctrl.accompany_main_suggest);
 //동행 게시글 쓰기o
 router.post('/companionPostC', accompany_ctrl.companionPost_create);
 //동행 게시글 수정o
