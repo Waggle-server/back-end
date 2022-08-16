@@ -3,6 +3,8 @@
 const accompanyDAO = require("../model/accompanyDAO");
 const chatDAO = require("../model/chatDAO");
 const pairDAO = require("../model/pairDAO");
+const alarmDAO = require("../model/alarmDAO");
+const decoDAO = require("../model/decoDAO");
 
 const paging = (currentPage, pageSize) => {
     const default_start_page = 0;
@@ -74,18 +76,70 @@ async function companionPost_create(req, res, next) {
         const db_data = await accompanyDAO.companion_postC(parameter);
         const post_key = db_data.insertId;
 
-        const tag = tags.split(', ');
-        const tag_lenght = tag.length;
+        if(tags) {
+            const tag = tags.split(', ');
+            const tag_lenght = tag.length;
 
-        for(let i=0; i<tag_lenght; i++) {
-            let tagg = tag[i];
-            const tag_parameter = { post_key, tagg };
-            const tag_data = await accompanyDAO.insert_tag(tag_parameter);
-        };
+            for(let i=0; i<tag_lenght; i++) {
+                let tagg = tag[i];
+                const tag_parameter = { post_key, tagg };
+                const tag_data = await accompanyDAO.insert_tag(tag_parameter);
+            };
+        }
 
-        res.send({ result: post_key });
+        const count_post = await accompanyDAO.count_post(user_key);
+        let send_deco;
+        let deco_data = "";
+        let alarm_data = "";
+
+        if(count_post[0].cnt == 1) { 
+            send_deco = await decoDAO.send_deco(8); 
+            deco_data = send_deco[0].content;
+
+            alarm_data = await alarmDAO.alarm_content(5);
+            alarm_data = alarm_data[0].msg;
+
+            const msg = deco_data + " " + alarm_data;
+
+            const parameter = { user_key, msg };
+            const insert_alarm_data = await alarmDAO.deco_save(parameter);
+
+            res.send({ result: post_key, deco_data, alarm_data });
+        }
+
+        else if(count_post[0].cnt == 5) { 
+            send_deco = await decoDAO.send_deco(9); 
+            deco_data = send_deco[0].content;
+
+            alarm_data = await alarmDAO.alarm_content(5);
+            alarm_data = alarm_data[0].msg;
+
+            const msg = deco_data + " " + alarm_data;
+
+            const parameter = { user_key, msg };
+            const insert_alarm_data = await alarmDAO.deco_save(parameter);
+
+            res.send({ result: post_key, deco_data, alarm_data });
+        }
+
+        else if(count_post[0].cnt == 10) { 
+            send_deco = await decoDAO.send_deco(10);
+            deco_data = send_deco[0].content;
+
+            alarm_data = await alarmDAO.alarm_content(5);
+            alarm_data = alarm_data[0].msg;
+
+            const msg = deco_data + " " + alarm_data;
+
+            const parameter = { user_key, msg };
+            const insert_alarm_data = await alarmDAO.deco_save(parameter);
+
+            res.send({ result: post_key, deco_data, alarm_data });
+        }
+        else {
+            res.send({ result: post_key });
+        }
     } catch (err) {
-        console.log(err)
         res.send("게시글 업로드 오류");
     }
 }
@@ -192,8 +246,7 @@ async function companionPost_read_A_real_time(req, res, next) {
             "db_data": db_data
         });
     } catch (err) {
-        console.log(err);
-        res.send(err);
+        res.send("읽어올 수 없습니다.");
     }
 }
 
@@ -302,8 +355,68 @@ async function companionPost_Deadline_Btn(req, res, next) {
         parameter = { post_key, host };
         const deadline = await accompanyDAO.check_deadline(parameter);
 
-        res.send("success");
+        const mate_user = await pairDAO.get_mate_user(post_key);
+
+        let send_deco = []; let deco_data = [];
+        let alarm_data = []; let user_keys = [];
+        
+        for(let i=0; i<mate_user.length; i++) {
+            let count_user = await pairDAO.count_user(mate_user[i].user_key);
+            let user_key = mate_user[i].user_key;
+            user_keys.push(user_key);
+
+            if(count_user[0].cnt == 1) {
+                let str = await decoDAO.send_deco(11);
+                send_deco.push(str);
+                str = str[0].content;
+                deco_data.push(str);
+
+                str = await alarmDAO.alarm_content(5);
+                str = str[0].msg;
+                alarm_data.push(str);
+
+                const msg = deco_data[i] + " " + alarm_data[i];
+
+                const parameter = { user_key, msg };
+                const insert_alarm_data = await alarmDAO.deco_save(parameter);
+            }
+
+            else if(count_user[0].cnt == 5) {
+                let str = await decoDAO.send_deco(12);
+                send_deco.push(str);
+                str = str[0].content;
+                deco_data.push(str);
+
+                str = await alarmDAO.alarm_content(5);
+                str = str[0].msg;
+                alarm_data.push(str);
+
+                const msg = deco_data[i] + " " + alarm_data[i];
+
+                const parameter = { user_key, msg };
+                const insert_alarm_data = await alarmDAO.deco_save(parameter);
+            }
+
+            else if(count_user[0].cnt == 10) {
+                let str = await decoDAO.send_deco(13);
+                send_deco.push(str);
+                str = str[0].content;
+                deco_data.push(str);
+
+                str = await alarmDAO.alarm_content(5);
+                str = str[0].msg;
+                alarm_data.push(str);
+
+                const msg = deco_data[i] + " " + alarm_data[i];
+
+                const parameter = { user_key, msg };
+                const insert_alarm_data = await alarmDAO.deco_save(parameter);
+            }
+        }
+        
+        res.send({ user_keys, deco_data, alarm_data })
     } catch (err) {
+        console.log(err)
         res.send("error");
     }
 }

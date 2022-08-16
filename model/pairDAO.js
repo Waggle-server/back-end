@@ -1,6 +1,6 @@
 "use strict";
 
-const {db} = require('../config/dbconn');
+const {db} = require("../config/dbconn");
 
 function load_user_key(parameter) {
     return new Promise((resolve, reject) => {
@@ -294,6 +294,28 @@ function type_zero(parameter) {
     });
 }
 
+function get_mate_user(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT user_key FROM pair_list where post_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
+            console.log(db_data)
+            if(db_data) resolve(db_data)
+            else reject(err);
+        })
+    })
+}
+
+function count_user(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT count(user_key) as cnt FROM pair_list where user_key = ?`
+        db.query(queryData, [parameter], (err, db_data) => {
+            console.log(db_data);
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
 module.exports = {
     load_user_key,
     load_user_id,
@@ -318,5 +340,7 @@ module.exports = {
     user_rating,
     disconnect,
     end_of_trip,
-    type_zero
+    type_zero,
+    get_mate_user,
+    count_user
 }

@@ -112,7 +112,7 @@ function read_upload_post(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
         const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
-                        (SELECT personnel FROM chat_list where accompany.post_key = chat_list.post_key) AS count_personnel, date_update
+        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_update
                         FROM accompany
                         LEFT OUTER JOIN user ON accompany.user_key = user.user_key ORDER BY date_update DESC LIMIT ?, ?`;
         db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
@@ -127,7 +127,7 @@ function read_closing_post(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
         const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
-                    (SELECT personnel FROM chat_list where accompany.post_key = chat_list.post_key) AS count_personnel, date_update
+        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_update
                     FROM accompany
                     LEFT OUTER JOIN user ON accompany.user_key = user.user_key ORDER BY date_update ASC LIMIT ?, ?`;
         db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
@@ -152,7 +152,7 @@ function companion_postR(parameter) {
 function companion_postR_A_real_time(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
-                        (SELECT personnel FROM chat_list where accompany.post_key = chat_list.post_key) AS count_personnel, date_update
+                        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_update
                         FROM accompany
                         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
                         ORDER BY date_update DESC LIMIT ?, ?`;
@@ -167,7 +167,7 @@ function companion_postR_A_real_time(parameter) {
 function companion_postR_A_closing(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
-        (SELECT personnel FROM chat_list where accompany.post_key = chat_list.post_key) AS count_personnel, date_update
+        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_update
         FROM accompany
         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
         ORDER BY date_update ASC LIMIT ?, ?`;
@@ -253,6 +253,16 @@ function check_close_personnel(parameter) {
     });
 }
 
+function count_post(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT count(user_key) as cnt FROM accompany where user_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
 module.exports = {  
     user_suggest,
     companion_postC,
@@ -273,5 +283,6 @@ module.exports = {
     companion_search_area,
     check_deadline,
     check_personnel,
-    check_close_personnel
+    check_close_personnel,
+    count_post
 }

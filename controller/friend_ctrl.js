@@ -16,19 +16,18 @@ async function req_friend(req, res, next) {
         let db_data = await friendDAO.req_friend(parameter);
 
         let data;
-        let img;
 
         const friend_req_data = await alarmDAO.friend_req_alarm(req_person);
         data = friend_req_data[0].nickname;
-        img = friend_req_data[0].img;
 
         const alarm_data = await alarmDAO.alarm_content(1);
         data = data + " " + alarm_data[0].msg;
+        console.log(data);
 
         parameter = { req_person, res_person, data };
         db_data = await alarmDAO.friend_req_save(parameter);
 
-        res.send("success");
+        res.send({ result: data });
     } catch (err) {
         res.send("사용자를 찾을 수 없습니다.");
     }
@@ -61,7 +60,7 @@ async function res_friend(req, res, next) {
             const parameter = { user_key, del_friend, data };
             const db_data = await alarmDAO.friend_res_save(parameter);
 
-            res.send("success");
+            res.send({ result: data });
         }
 
         if (answer == "거절") {

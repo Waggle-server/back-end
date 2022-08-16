@@ -101,6 +101,7 @@ async function photo_share(req, res, next) {
 
         res.send('success');
     } catch (err) {
+        console.log(err)
         res.send('사진 공유 오류')
     }
 }
@@ -236,6 +237,7 @@ async function pair_rate(req, res, next) {
             let user_key = user_key_[i];
             let rate = rating[i];
             let parameter = { post_key, user_key };
+            console.log(parameter)
 
             let mate_key = await pairDAO.load_mate_key_forUser(parameter);
             mate_key = mate_key[0].mate_key;
@@ -244,9 +246,10 @@ async function pair_rate(req, res, next) {
             console.log(parameter)
 
             let db_data = await pairDAO.user_rating(parameter);
-        };
-        res.send('success');    
+        };  
+        res.send("success")
     } catch (err) {
+        console.log(err)
         res.send('평가 오류')
     }
 }

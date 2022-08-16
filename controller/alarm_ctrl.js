@@ -18,10 +18,7 @@ async function alarm_main(req, res, next) {
 async function send_alarm(req, res, next) {
     try {
         const user_key = req.params.user_key;
-        const type = req.params.type;
-        const parameter = { user_key, type };
-
-        const db_data = await alarmDAO.alarm_type(parameter);
+        const db_data = await alarmDAO.alarm_msg(user_key);
         res.json({
             "db_data": db_data
         })
