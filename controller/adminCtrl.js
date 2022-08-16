@@ -55,6 +55,24 @@ const main = async (req, res) => {
 }
 
 
+
+// 관리
+
+// 유저
+const manage_user = async (req, res) => {
+    const parameters = {
+        admin_key: req.session.admin_key
+    }
+    let admin_info = await adminDAO.admin_info(parameters);
+
+    if(req.session.admin_key){
+        res.render('../views/admin/manage_user.ejs', {admin: admin_info[0]});
+    } else{
+        res.send("<script>location.href='/admin/login';</script>");
+    }
+}
+
+
 // const notice = async (req, res) => {
 //     let currentPage = req.query.page;
 //         const pageSize = 10;
@@ -97,5 +115,8 @@ module.exports = {
     logout_process,
 
 
-    main
+    main,
+
+
+    manage_user
 }

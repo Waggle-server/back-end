@@ -43,9 +43,9 @@ const userCheck = async (req, res) => {
         let db_data = await userDAO.exist_id(profile);
 
         if(db_data.length != 0){
-            res.send({result: {login: true, user_key: db_data[0].user_key}})
+            res.send({result: [{login: true, user_key: db_data[0].user_key}]})
         } else {
-            res.send({result: {login: false, user_key: null}})
+            res.send({result: [{login: false, user_key: null}]})
         }
     }
 }
@@ -60,15 +60,14 @@ const signUp  = async (req, res) => {
         console.log("잘못된 토큰");
         res.send({result: "Token error"})
     } else{
-        let insert_data = await userDAO.insert_profile(profile);
-        profile.user_key = insert_data.insertId;
-
         let db_data = await userDAO.exist_id(profile);
 
         if(db_data.length != 0){
-            res.send({result: {signip: true, user_key: db_data[0].user_key}})
+            res.send({result: [{signip: false, user_key: profile.user_key}]})
         } else {
-            res.send({result: {signup: false, user_key: null}})
+            let insert_data = await userDAO.insert_profile(profile);
+            profile.user_key = insert_data.insertId;
+            res.send({result: [{signup: true, user_key: profile.user_key}]})
         }
     }
 }

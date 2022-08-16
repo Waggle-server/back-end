@@ -17,7 +17,7 @@ const gbSearch = async (req, res) => {
         search: (req.query.search == undefined) ? "" : req.query.search,
         offset: page.offset,
         limit: page.limit,
-        user_key: req.body.user_key
+        user_key: req.get('user_key')
     }
 
     console.log(parameters);
