@@ -10,49 +10,10 @@
         body{
             background: #ff6400;
         }
-        #title{
-            position: absolute;
-            display: inline-block;
-            z-index: 50;
-            top: 40px;
-            width: 30%;
-            font-size: 200%;
-            margin-left: 35%;
-            color: #fff;
-            text-align: center;
-        }
-
-        img{
-            position: absolute;
-            display: inline-block; 
-            cursor: pointer;
-            transition: 10s;
-        }
-
-        img:active{
-            opacity: 0;
-        }
-
-        #halibut{
-            z-index: -1;
-            width: 30%;
-            top: 0;
-            left: 30px;
-            transform: rotate(10deg);
-        }
-
-        #seaweeds{
-            z-index: 0;
-            width: 15%;
-            bottom: 52px;
-            right: 60px;
-            transform: rotate(40deg);
-        }
-
         #main_contents{
-            width: 70%;
-            height: 550px;
-            margin: 100px 15% 50px 15%;
+            width: 1400px;
+            height: 750px;
+            margin: 100px auto 0 auto;
             box-shadow: 0px 0px 20px gray;
             border-radius: 10px;
             background-color: #fff;
@@ -65,14 +26,15 @@
 
         #login-title{
             border-right: 2px solid #eee;
+            overflow: hidden;
+            height: 750px;
         }
         #login-title h2{
             color: #ff6400;
             text-align: center;
             /* font-size: 4vw; */
-            font-size: 5vw;
-            height: 20%;
-            margin-top: 40%;
+            font-size: 600%;
+            margin-top: 300px;
 
             font-family: helvetica, arial;
         }
@@ -158,8 +120,8 @@
                     
                 </h2>
             </div>
-            
-            <form class="formBox" id="formBox" action="login/process" method="POST" >
+
+            <form class="formBox" id="formBox" action="/admin/login/process" method="POST" >
                 <input type="text" name="id" placeholder="아이디" required/>
                 <input type="password" name="pw" placeholder="비밀번호" required/>
                 <input id="login_btn" type ="submit" value="로그인">

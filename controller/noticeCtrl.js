@@ -41,10 +41,9 @@ const noticeRead = async (req, res) => {
     const parameters = {
         notice_key: req.params.num
     }
-
     try {
         const db_data = await noticeDAO.noticeRead(parameters);
-        res.send({result : db_data});
+        res.send({result : db_data[0]});
     } catch (err) {
         console.log(err);
     }

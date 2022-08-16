@@ -1,6 +1,7 @@
 "use strict";
 
 const mysql = require('mysql');
+
 require('dotenv').config({ path: 'wagle.env'});
 
 const session = require('express-session');
@@ -17,9 +18,13 @@ const dbOption = {
 
 const db = mysql.createConnection(dbOption);
 
+
+
 const sessionStore = new MySQLStore(dbOption);
 
 db.connect();
+
+
 
 let db_keep = function(){
     db.query('SELECT 1', function(err){

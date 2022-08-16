@@ -43,14 +43,9 @@ const userCheck = async (req, res) => {
         let db_data = await userDAO.exist_id(profile);
 
         if(db_data.length != 0){
-            req.session.user_key = db_data[0].user_key;
-            req.session.user_id = db_data[0].user_id;
-            req.session.user_nickname = db_data[0].user_nickname;
-            req.session.user_img = db_data[0].user_img;
-
-            res.send({result: true})
+            res.send({result: {login: true, user_key: db_data[0].user_key}})
         } else {
-            res.send({result: false})
+            res.send({result: {login: false, user_key: null}})
         }
     }
 }
@@ -63,28 +58,23 @@ const signUp  = async (req, res) => {
     console.log(profile)
     if(profile == null){
         console.log("잘못된 토큰");
+        res.send({result: "Token error"})
     } else{
         let insert_data = await userDAO.insert_profile(profile);
         profile.user_key = insert_data.insertId;
 
         let db_data = await userDAO.exist_id(profile);
 
-        req.session.user_key = db_data[0].user_key;
-        req.session.user_id = db_data[0].user_id;
-        req.session.user_nickname = db_data[0].user_nickname;
-        req.session.user_img = db_data[0].user_img;
-
-        res.send({result: true});
+        if(db_data.length != 0){
+            res.send({result: {signip: true, user_key: db_data[0].user_key}})
+        } else {
+            res.send({result: {signup: false, user_key: null}})
+        }
     }
 }
 
 const logOut = async (req, res) => {
-    delete req.session.user_key;
-    delete req.session.user_id;
-    delete req.session.user_nickname;
-    delete req.session.user_img;
-
-    res.send({result: true});
+    res.send({result: {logout: true}});
 }
 
 

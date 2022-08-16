@@ -2,7 +2,7 @@
 
 const app = require('../app');
 const http = require('http');
-const port = process.env.S_PORT;
+const port = process.env.S_PORT | 3000;
 
 
 const socketio = require('../middleware/socketio');
