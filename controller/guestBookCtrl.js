@@ -43,7 +43,7 @@ const gbRead = async (req, res) => {
         gb_key: req.params.num
     }
     try {
-        parameters.user_key = req.session.user_key
+        parameters.user_key = req.get('user_key')
 
         const db_data = await guestBookDAO.gbRead(parameters);
 
@@ -181,7 +181,7 @@ const gbDelete = async (req, res) => {
 const gbHeart = async (req, res) => {
     const parameters = {
         gb_key: req.body.gb_key,
-        user_key: req.session.user_key
+        user_key: req.get('user_key')
     }
     console.log(req.body)
     try {

@@ -66,12 +66,21 @@
             width: 100%;
             border: 1px solid #ccc;
             border-collapse: collapse;
+            text-align: center;
 
         }
 
         .content table tr, .content table th, .content table td{
             border: 1px solid #ccc;
-            
+        }
+
+        .content table .place{
+            cursor: pointer;
+        }
+
+        .content table .accept_false{
+            color: #f00;
+            font-weight: bold;
         }
 
 
@@ -84,6 +93,8 @@
         
         $(document).ready(function() {
             $('#admin_name').text(admin_name)
+
+            pageMove();
 		});
     </script>
     
@@ -107,24 +118,130 @@
             <div class="content">
 
                 <table>
-                    <tr>
+                    <!-- <tr>
                         <th>고유키</th>
                         <th>장소명</th>
+                        <th>작성자</th>
                         <th>게시일</th>
                         <th>승인</th>
                     </tr>
-
                     <tr>
                         <td class="gp_key">1</td>
                         <td class="place">성산일출봉</td>
+                        <td class="nickname">작성자(14)</td>
                         <td class="date">2020-10-10 11:11</td>
                         <td class="accept">true</td>
-                    </tr>
-
+                    </tr> -->
                 </table>
+
+                <center>
+                    <button class="prev_btn" onclick="pageMove('prev')">이전</button>
+                    <button class="next_btn" onclick="pageMove('next')">다음</button>
+                </center>
+                
 
             </div>
         </div>
+
+
+
+        <script>
+            const PH_search = function(){
+                let start_input = document.getElementsByClassName("start_date")[0].value + " "+ document.getElementsByClassName("start_time")[0].value;
+                let end_input = document.getElementsByClassName("end_date")[0].value + " "+ document.getElementsByClassName("end_time")[0].value;
+        
+                let start = new Date(start_input);            
+                let end = new Date(end_input);
+        
+                if(start > end){
+                    alert("잘못된 날짜 입력");
+                    return "";
+                } else if(!isNaN(start.getDate()) && !isNaN(end.getDate())){
+                    document.getElementsByClassName("search_start")[0].innerText = start_input;
+                    document.getElementsByClassName("search_end")[0].innerText = end_input;
+                    return `&start=${start_input}&end=${end_input}`;
+                } else {
+                    
+                    return "";
+                }
+            }
+        </script>
+        
+        <script>
+            let page = 0;
+            let cnt = 10;
+        
+            let table = document.getElementsByTagName("table")[0]
+            
+            const pageMove = function(move){
+                let table_inner = `<tr>
+                                    <th>고유키</th>
+                                    <th>장소명</th>
+                                    <th>작성자</th>
+                                    <th>게시일</th>
+                                    <th>승인</th>
+                                </tr>`;
+                if(move === 'prev'){
+                    page--;
+                } else if(move === 'next') {
+                    page++;
+                } else {
+                    page = 0;
+                }
+                
+                if(page < 0){
+                    page=0;
+                    alert("첫번째 페이지 입니다.")
+                }
+                if(page > cnt){
+                    page = cnt;
+                    alert("마지막 페이지 입니다.")
+                }
+        
+                $.ajax({
+                    type:'get',
+                    dataType:'json',
+                    url:`/admin/manage/guest/place/list?page=${page}`,
+                    success : function(data) {
+                        const guest_place = data.result;
+                        cnt = data.cnt;
+                        for(let i=0; i<guest_place.length; i++){
+                            table_inner += `
+                            <tr>
+                                <td> 
+                                    ${guest_place[i]['gp_key']}
+                                </td>
+                                <td onclick="location.href='/admin/manage/guest/place/read/${guest_place[i]['gp_key']}'" class="place">
+                                    ${guest_place[i]['place']}
+                                </td>
+                                <td> 
+                                    ${guest_place[i]['nickname']}
+                                    (${guest_place[i]['user_key']})
+                                </td>
+                                <td> 
+                                    ${guest_place[i]['date']}
+                                </td>`
+                            if(guest_place[i]['accept']){
+                                table_inner += `
+                                        <td class="accept_true"> 
+                                            true
+                                        </td>
+                                    </tr>`;
+                            } else{
+                                table_inner += `
+                                        <td class="accept_false"> 
+                                            false
+                                        </td>
+                                    </tr>`;
+                            }
+                        }
+                        table.innerHTML = table_inner;
+                    },
+                    error : function(error) {
+                    }
+                });
+            }
+        </script>
 
         
 

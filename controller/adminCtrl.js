@@ -87,8 +87,8 @@ const manage_guest = async (req, res) => {
     }
 }
 
-// 방명록 - 장소등록
-const manage_guest_place = async (req, res) => {
+// 방명록 - 장소등록 guestPlace
+const manage_gp = async (req, res) => {
     const parameters = {
         admin_key: req.session.admin_key
     }
@@ -101,8 +101,30 @@ const manage_guest_place = async (req, res) => {
     }
 }
 
+const manage_gp_list = async (req, res) => {
+    // 페이징
+    // 출처: 해양 ITRC 코드
+    let currentPage = req.query.page;
+    const pageSize = 10;
+    const page = paging(currentPage, pageSize);
+
+    const parameters = {
+        offset: page.offset,
+        limit: page.limit,
+    }
+
+    const pageCnt = await adminDAO.gp_list_cnt();
+    const cnt = parseInt(pageCnt[0].cnt / pageSize);
+    console.log(pageCnt, cnt);
+
+    const db_data =  await adminDAO.gp_list(parameters);
+
+    res.send({result:db_data, cnt});
+}
+
+
 // 방명록 - 방명록
-const manage_guest_book = async (req, res) => {
+const manage_gb = async (req, res) => {
     const parameters = {
         admin_key: req.session.admin_key
     }
@@ -162,7 +184,12 @@ module.exports = {
 
 
     manage_user,
+
     manage_guest,
-    manage_guest_place,
-    manage_guest_book
+
+    manage_gp,
+    manage_gp_list,
+
+    manage_gb,
+    
 }

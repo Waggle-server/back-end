@@ -14,8 +14,11 @@ router.get('/login/logout', adminCtrl.logout_process)
 router.get('/manage/user', adminCtrl.manage_user);
 
 router.get('/manage/guest', adminCtrl.manage_guest);
-router.get('/manage/guest/place', adminCtrl.manage_guest_place);
-router.get('/manage/guest/book', adminCtrl.manage_guest_book);
+router.get('/manage/guest/place', adminCtrl.manage_gp);
+router.get('/manage/guest/place/list', adminCtrl.manage_gp_list);
+
+
+router.get('/manage/guest/book', adminCtrl.manage_gb);
 
 
 router.get('/', adminCtrl.main);
