@@ -15,7 +15,7 @@ function read_deco_list() {
 
 function send_deco(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `SELECT content FROM decoration where deco_key = ?`;
+        const queryData = `SELECT deco_key, content FROM decoration where deco_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
             console.log(db_data)
             if(db_data) resolve(db_data);

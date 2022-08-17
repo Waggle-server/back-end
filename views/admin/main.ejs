@@ -11,8 +11,8 @@
     <style>
         body{
             background: #ff6400;
-            width: 50%;
-            margin-left: 25%;
+            width: 850px;
+            margin: 0 auto;
         }
 
         header{
@@ -25,6 +25,7 @@
             font-family: helvetica, arial;
             text-align: center;
             font-size: 400%;
+            cursor: pointer;
         }
 
         header p{
@@ -91,7 +92,7 @@
 
     <body>
         <header>
-            <h1>Wagle</h1>
+            <h1 onclick="location.href='/admin'">Wagle</h1>
             <p>
                 <span id="admin_name"></span>
                 <a href="/admin/login/logout" id="logout_btn">로그아웃</a>
@@ -101,7 +102,7 @@
 
         <div id="content_wrap">
             <div class="content" onclick="location.href='/admin/manage/user'">유저 관리</div>
-            <div class="content">방명록 관리</div>
+            <div class="content"  onclick="location.href='/admin/manage/guest'">방명록 관리</div>
             <div class="content">동행 관리</div>
             <div class="content">공지사항 관리</div>
         </div>

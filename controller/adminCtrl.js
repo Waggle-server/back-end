@@ -73,6 +73,49 @@ const manage_user = async (req, res) => {
 }
 
 
+// 방명록
+const manage_guest = async (req, res) => {
+    const parameters = {
+        admin_key: req.session.admin_key
+    }
+    let admin_info = await adminDAO.admin_info(parameters);
+
+    if(req.session.admin_key){
+        res.render('../views/admin/manage_guest.ejs', {admin: admin_info[0]});
+    } else{
+        res.send("<script>location.href='/admin/login';</script>");
+    }
+}
+
+// 방명록 - 장소등록
+const manage_guest_place = async (req, res) => {
+    const parameters = {
+        admin_key: req.session.admin_key
+    }
+    let admin_info = await adminDAO.admin_info(parameters);
+
+    if(req.session.admin_key){
+        res.render('../views/admin/manage_guest_place.ejs', {admin: admin_info[0]});
+    } else{
+        res.send("<script>location.href='/admin/login';</script>");
+    }
+}
+
+// 방명록 - 방명록
+const manage_guest_book = async (req, res) => {
+    const parameters = {
+        admin_key: req.session.admin_key
+    }
+    let admin_info = await adminDAO.admin_info(parameters);
+
+    if(req.session.admin_key){
+        res.render('../views/admin/manage_guest_book.ejs', {admin: admin_info[0]});
+    } else{
+        res.send("<script>location.href='/admin/login';</script>");
+    }
+}
+
+
 // const notice = async (req, res) => {
 //     let currentPage = req.query.page;
 //         const pageSize = 10;
@@ -118,5 +161,8 @@ module.exports = {
     main,
 
 
-    manage_user
+    manage_user,
+    manage_guest,
+    manage_guest_place,
+    manage_guest_book
 }

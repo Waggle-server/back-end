@@ -48,7 +48,6 @@
 
         .content_wrap{
             width: 100%;
-            height: 700px;
         }
 
         .content_title{
@@ -60,10 +59,19 @@
         .content{
             margin-top: 30px;
             border: 1px solid #fff;
-            height: 1000px;
+            background-color: #fff;
+            padding: 3%;
         }
         .content table{
             width: 100%;
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+
+        }
+
+        .content table tr, .content table th, .content table td{
+            border: 1px solid #ccc;
+            
         }
 
 
@@ -95,14 +103,22 @@
 
 
         <div class="content_wrap">
-            <div class="content_title">유저 관리</div>
+            <div class="content_title">방명록 관리 - 장소등록</div>
             <div class="content">
 
-                <table border="1">
+                <table>
                     <tr>
-                        <td>profile image</td>
-                        <td>id</td>
-                        <td>nickname</td>
+                        <th>고유키</th>
+                        <th>장소명</th>
+                        <th>게시일</th>
+                        <th>승인</th>
+                    </tr>
+
+                    <tr>
+                        <td class="gp_key">1</td>
+                        <td class="place">성산일출봉</td>
+                        <td class="date">2020-10-10 11:11</td>
+                        <td class="accept">true</td>
                     </tr>
 
                 </table>

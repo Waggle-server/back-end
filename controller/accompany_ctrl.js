@@ -94,12 +94,12 @@ async function companionPost_create(req, res, next) {
 
         if(count_post[0].cnt == 1) { 
             send_deco = await decoDAO.send_deco(8); 
-            deco_data = send_deco[0].content;
+            deco_data = send_deco[0];
 
             alarm_data = await alarmDAO.alarm_content(5);
             alarm_data = alarm_data[0].msg;
 
-            const msg = deco_data + " " + alarm_data;
+            const msg = deco_data.content + " " + alarm_data;
 
             const parameter = { user_key, msg };
             const insert_alarm_data = await alarmDAO.deco_save(parameter);
@@ -109,12 +109,12 @@ async function companionPost_create(req, res, next) {
 
         else if(count_post[0].cnt == 5) { 
             send_deco = await decoDAO.send_deco(9); 
-            deco_data = send_deco[0].content;
+            deco_data = send_deco[0];
 
             alarm_data = await alarmDAO.alarm_content(5);
             alarm_data = alarm_data[0].msg;
 
-            const msg = deco_data + " " + alarm_data;
+            const msg = deco_data.content + " " + alarm_data;
 
             const parameter = { user_key, msg };
             const insert_alarm_data = await alarmDAO.deco_save(parameter);
@@ -124,12 +124,12 @@ async function companionPost_create(req, res, next) {
 
         else if(count_post[0].cnt == 10) { 
             send_deco = await decoDAO.send_deco(10);
-            deco_data = send_deco[0].content;
+            deco_data = send_deco[0];
 
             alarm_data = await alarmDAO.alarm_content(5);
             alarm_data = alarm_data[0].msg;
 
-            const msg = deco_data + " " + alarm_data;
+            const msg = deco_data.content + " " + alarm_data;
 
             const parameter = { user_key, msg };
             const insert_alarm_data = await alarmDAO.deco_save(parameter);
@@ -274,8 +274,10 @@ async function companionPost_read_A_closing(req, res, next) {
 async function profile_detail(req, res, next) {
     try {
         const user_key = req.params.user_key;
-        //방명록에서 사진도 불러와야 함(나경이 코드?)
-        //user DB에 레벨, 훈장, 고도 추가해야함?
+
+        //mypage 짜고 거기 있는 정보 가져와서
+        //프로필 디테일 보여주는 과정 필요
+
         const db_data = await accompanyDAO.companion_detail(user_key);
         res.json({
             "db_data": db_data
