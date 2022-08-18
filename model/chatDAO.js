@@ -5,7 +5,7 @@ const {db} = require("../config/dbconn");
 function chat_listR(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
-        const queryData = `SELECT chat_list.title, nickname, img FROM chat_list 
+        const queryData = `SELECT room_key, chat_list.title, nickname, img FROM chat_list 
                            LEFT OUTER JOIN user on chat_list.user_key = user.user_key 
                            LEFT OUTER JOIN accompany on chat_list.post_key = accompany.post_key
                            where chat_list.user_key = ?`;

@@ -14,14 +14,10 @@ router.get('/qna', noticeCtrl.noticeList(5, 5));
 router.get('/read/:num', noticeCtrl.noticeRead);
 
 
-
-
-// get - 관리자페이지 view
-// post - db 넘기기
-
 router.get('/create', noticeCtrl.getNoticeCreate);
+
 router.post('/create', 
-    multer.upload('notice').single('img'),
+    multer.upload('qna').single('img'),
     noticeCtrl.postNoticeCreate
 );
 

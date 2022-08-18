@@ -228,8 +228,17 @@ async function pair_rate(req, res, next) {
         const user_keys = req.body.user_keys;
         const ratings = req.body.ratings;
 
-        const user_key_ = user_keys.split(', ');
-        const rating = ratings.split(', ');
+        let user_key_;  let rating;
+
+        if (user_keys.length >= 2) {
+            user_key_ = user_keys.split(', ');
+            rating = ratings.split(', ');
+        }
+
+        else {
+            user_key_ = user_keys;
+            rating = ratings;
+        }
 
         const user_len = user_key_.length;
 

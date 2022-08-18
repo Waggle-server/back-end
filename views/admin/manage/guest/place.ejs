@@ -26,6 +26,10 @@
             text-align: center;
             font-size: 400%;
             cursor: pointer;
+            transition: 0.3s;
+        }
+        header h1:hover{
+            color: #000;
         }
 
         header p{
@@ -56,6 +60,12 @@
             padding: 20px 0;
             border-radius: 15px;
         }
+        .content_title span{
+            cursor: pointer;
+        }
+        .content_title span:hover{
+            font-weight: bold;
+        }
         .content{
             margin-top: 30px;
             border: 1px solid #fff;
@@ -72,9 +82,11 @@
 
         .content table tr, .content table th, .content table td{
             border: 1px solid #ccc;
+            padding: 1%;
         }
 
         .content table .place{
+            text-decoration: underline;
             cursor: pointer;
         }
 
@@ -114,7 +126,10 @@
 
 
         <div class="content_wrap">
-            <div class="content_title">방명록 관리 - 장소등록</div>
+            <div class="content_title">
+                <span onclick="location.href='/admin/manage/guest'">방명록 관리</span>
+                - 장소등록
+            </div>
             <div class="content">
 
                 <table>
@@ -142,30 +157,6 @@
 
             </div>
         </div>
-
-
-
-        <script>
-            const PH_search = function(){
-                let start_input = document.getElementsByClassName("start_date")[0].value + " "+ document.getElementsByClassName("start_time")[0].value;
-                let end_input = document.getElementsByClassName("end_date")[0].value + " "+ document.getElementsByClassName("end_time")[0].value;
-        
-                let start = new Date(start_input);            
-                let end = new Date(end_input);
-        
-                if(start > end){
-                    alert("잘못된 날짜 입력");
-                    return "";
-                } else if(!isNaN(start.getDate()) && !isNaN(end.getDate())){
-                    document.getElementsByClassName("search_start")[0].innerText = start_input;
-                    document.getElementsByClassName("search_end")[0].innerText = end_input;
-                    return `&start=${start_input}&end=${end_input}`;
-                } else {
-                    
-                    return "";
-                }
-            }
-        </script>
         
         <script>
             let page = 0;

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wagle - 관리자 페이지</title>
+
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+    <style>
+        body{
+            background: #ff6400;
+            width: 850px;
+            margin: 0 auto;
+        }
+
+        header{
+            margin: 50px 0 10px 0;
+        }
+
+        header h1{
+            margin: 0;
+            color: #fff;
+            font-family: helvetica, arial;
+            text-align: center;
+            font-size: 400%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        header h1:hover{
+            color: #000;
+        }
+
+        header p{
+            position: relative;
+            top: -10px;
+            margin: 0;
+            text-align: right;
+            color: #fff;
+        }
+
+        header #admin_name{
+            display: inline-block;;
+            
+        }
+        header #logout_btn{
+            text-decoration: none;
+        }
+
+
+
+        .content_wrap{
+            width: 100%;
+        }
+
+        .content_title{
+            background-color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            border-radius: 15px;
+        }
+        .content_title span{
+            cursor: pointer;
+        }
+        .content_title span:hover{
+            font-weight: bold;
+        }
+        .content{
+            margin-top: 30px;
+            border: 1px solid #fff;
+            background-color: #fff;
+            padding: 3%;
+        }
+        .content table{
+            width: 100%;
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            text-align: center;
+
+        }
+
+        .content table tr, .content table th, .content table td{
+            border: 1px solid #ccc;
+            padding: 1%;
+        }
+
+        .content table .book{
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+
+
+    </style>
+
+    <script>
+        let admin_key = `<%= admin['admin_key'] %>`
+        let admin_name = `<%= admin['name'] %>`
+
+        
+        $(document).ready(function() {
+            $('#admin_name').text(admin_name)
+
+            pageMove();
+		});
+    </script>
+    
+</head>
+<body>
+    
+    <!-- #ff6400 -->
+
+    <body>
+        <header>
+            <h1 onclick="location.href='/admin'">Wagle</h1>
+            <p>
+                <span id="admin_name"></span>
+                <a href="/admin/login/logout" id="logout_btn">로그아웃</a>
+            </p>
+        </header>
+
+
+        <div class="content_wrap">
+            <div class="content_title">
+                <span onclick="location.href='/admin/manage/guest'">방명록 관리</span>
+                - 방명록
+            </div>
+            <div class="content">
+
+                <table>
+                    <!-- <tr>
+                        <th>고유키</th>
+                        <th>장소명</th>
+                        <th>내용</th>
+                        <th>작성자</th>
+                        <th>게시일</th>
+                    </tr>
+                    <tr>
+                        <td class="gp_key">1</td>
+                        <td class="place">성산일출봉</td>
+                        <td class="nickname">작성자(14)</td>
+                        <td class="date">2020-10-10 11:11</td>
+                        <td class="accept">true</td>
+                    </tr> -->
+                </table>
+
+                <center>
+                    <button class="prev_btn" onclick="pageMove('prev')">이전</button>
+                    <button class="next_btn" onclick="pageMove('next')">다음</button>
+                </center>
+                
+
+            </div>
+        </div>
+
+        
+        <script>
+            let page = 0;
+            let cnt = 10;
+        
+            let table = document.getElementsByTagName("table")[0]
+            
+            const pageMove = function(move){
+                let table_inner = `<tr>
+                                    <th>고유키</th>
+                                    <th>장소명</th>
+                                    <th>내용</th>
+                                    <th>작성자</th>
+                                    <th>게시일</th>
+                                </tr>`;
+                if(move === 'prev'){
+                    page--;
+                } else if(move === 'next') {
+                    page++;
+                } else {
+                    page = 0;
+                }
+                
+                if(page < 0){
+                    page=0;
+                    alert("첫번째 페이지 입니다.")
+                }
+                if(page > cnt){
+                    page = cnt;
+                    alert("마지막 페이지 입니다.")
+                }
+        
+                $.ajax({
+                    type:'get',
+                    dataType:'json',
+                    url:`/admin/manage/guest/book/list?page=${page}`,
+                    success : function(data) {
+                        const guest_book = data.result;
+                        cnt = data.cnt;
+                        for(let i=0; i<guest_book.length; i++){
+                            table_inner += `
+                            <tr>
+                                <td> 
+                                    ${guest_book[i]['gb_key']}
+                                </td>
+                                <td>
+                                    ${guest_book[i]['place']}
+                                    (${guest_book[i]['gp_key']})
+                                </td>
+                                <td onclick="location.href='/admin/manage/guest/book/read/${guest_book[i]['gb_key']}'" class="book"> 
+                                    ${guest_book[i]['comment']}
+                                </td>
+                                <td> 
+                                    ${guest_book[i]['nickname']}
+                                    (${guest_book[i]['user_key']})
+                                </td>
+                                <td> 
+                                    ${guest_book[i]['date']}
+                                </td>
+                            <tr>`
+                        }
+                        table.innerHTML = table_inner;
+                    },
+                    error : function(error) {
+                    }
+                });
+            }
+        </script>
+
+        
+
+        
+        
+    </body>
+</html>

@@ -2,9 +2,39 @@
 
 const {db} = require("../config/dbconn");
 
+function read_user_key() {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT user_key FROM user`;
+        db.query(queryData, (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
 function user_suggest(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `SELECT user_key, nickname, img, intro FROM user LEFT OUTER JOIN user_detail ON user_detail.user_key = user.user_key where user_key = ?`;
+        const queryData = `SELECT user.user_key, nickname, img, intro FROM user LEFT OUTER JOIN user_detail ON user_detail.user_key = user.user_key where user.user_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
+function accompany_tag(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT user_key, tag FROM accompany where user_key = ? AND tag IS NOT NULL`;
+        db.query(queryData, [parameter], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
+function profile_tag(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT user_key, tag FROM user_detail where user_key = ? AND tag IS NOT NULL`;
         db.query(queryData, [parameter], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);
@@ -266,7 +296,10 @@ function count_post(parameter) {
 }
 
 module.exports = {  
+    read_user_key,
     user_suggest,
+    accompany_tag,
+    profile_tag,
     companion_postC,
     accompany_info,
     insert_tag,

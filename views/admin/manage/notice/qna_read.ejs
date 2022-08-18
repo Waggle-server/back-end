@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wagle - 관리자 페이지</title>
+
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+    <style>
+        body{
+            background: #ff6400;
+            width: 850px;
+            margin: 0 auto;
+        }
+
+        header{
+            margin: 50px 0 10px 0;
+        }
+
+        header h1{
+            margin: 0;
+            color: #fff;
+            font-family: helvetica, arial;
+            text-align: center;
+            font-size: 400%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        header h1:hover{
+            color: #000;
+        }
+
+        header p{
+            position: relative;
+            top: -10px;
+            margin: 0;
+            text-align: right;
+            color: #fff;
+        }
+
+        header #admin_name{
+            display: inline-block;;
+            
+        }
+        header #logout_btn{
+            text-decoration: none;
+        }
+
+
+
+        .content_wrap{
+            width: 100%;
+            margin-bottom: 50px;
+        }
+
+        .content_title{
+            background-color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            border-radius: 15px;
+        }
+        .content_title span{
+            cursor: pointer;
+        }
+        .content_title span:hover{
+            font-weight: bold;
+        }
+        .content{
+            margin-top: 30px;
+            border: 1px solid #fff;
+            background-color: #fff;
+            padding: 3%;
+        }
+        .content .btn{
+            height: 100px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+            grid-gap: 50px;
+        }
+        .content .btn button{
+            font-size: 130%;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .content .btn button:hover{
+            box-shadow: 0px 0px 15px #ff6400;
+        }
+        .content .btn #delete{
+            background-color: #aaa;
+        }
+
+        .content .btn #answer_1{
+            background-color: #44f;
+            color: #fff;
+        }
+        .content .btn #answer_2{
+            background-color: #0d0;
+            color: #fff;
+        }
+
+        .content #answer{
+            display: none;
+        }
+
+        .content #answer_text{
+            width: 100%;
+            height: 300px;
+            margin-bottom: 30px;
+            font-size: 150%;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            resize: none;
+        }
+
+        #answer input[type=submit]{
+            width: 100%;
+            height: 50px;
+            margin-bottom: 30px;
+            text-align: center;
+            background-color: #ff6400;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
+        #answer input[type=submit]:hover{
+            box-shadow: 0px 0px 15px #ff6400;
+        }
+
+        .content img{
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        
+
+
+
+    </style>
+
+    <script>
+        let admin_key = `<%= admin['admin_key'] %>`
+        let admin_name = `<%= admin['name'] %>`
+
+        let img_url = `/public/images/qna/`+`<%=read['qna_key']%>`+`.`+`<%=read['img']%>`;
+        
+        
+        $(document).ready(function() {
+            $('#admin_name').text(admin_name)
+		});
+    </script>
+    
+</head>
+<body>
+    
+    <!-- #ff6400 -->
+
+    <body>
+        <header>
+            <h1 onclick="location.href='/admin'">Wagle</h1>
+            <p>
+                <span id="admin_name"></span>
+                <a href="/admin/login/logout" id="logout_btn">로그아웃</a>
+            </p>
+        </header>
+
+
+        <div class="content_wrap">
+            <div class="content_title">
+                <span onclick="location.href='/admin/manage/notice'">공지사항 관리</span>
+                - 
+                <span onclick="location.href='/admin/manage/notice/qna'">문의사항</span>
+                (<%=read['qna_key']%>)
+            </div>
+
+            <div class="content">
+                <div class="btn">
+
+                    <% if(read['answer'] == null){ %>
+                        <button id="answer_1" onclick="answer_display()">답변</button>
+                    <% } else { %>
+                        <button id="answer_2" onclick="answer_display()">답변 수정</button>
+                    <% } %>
+                </div>
+
+                <form id="answer" action="/admin/manage/notice/qna/answer/<%=read['qna_key']%>" method="post">
+                    <textarea name="answer" id="answer_text" placeholder="답변 입력"></textarea>
+                    <input type="submit">
+                </form>
+                              
+                <hr>
+                <h2><%=read['title']%></h2>
+                <p><%=read['content']%></p>
+                <small>작성자: <%=read['nickname']%> (<%=read['user_key']%>)</small><br>
+                <small>게시일: <%=read['date']%></small><br>
+                <small>수정일: <%=read['date_update']%></small>
+                <script>
+                    document.write(`<img src=${img_url}>`)
+                </script>
+
+                <% if(read['answer'] != null){ %>
+                    <hr>
+                    <h2>Re:</h2>
+                    <p><%=read['answer']%></p>
+                <% } %>
+                
+            </div>
+        </div>
+        
+        
+
+        <script>
+            let gb_delete = ()=>{
+                if(confirm("정말로 삭제하시겠습니까?")){
+                    let check = prompt("'삭제합니다'를 입력해주세요.");
+                    if(check === "삭제합니다"){
+                        location.href = `/admin/manage/guest/book/delete/<%=read['gb_key']%>`;
+                    } else {
+                        alert("잘못된 입력");
+                    }
+                }
+            }
+
+            let answer_display = () => {
+                if($('#answer').css('display') == 'block'){
+                    $('#answer').css('display', 'none');
+                } else{
+                    $('#answer').css('display', 'block');
+                }
+            }
+        </script>
+        
+    </body>
+</html>

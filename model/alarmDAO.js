@@ -101,7 +101,7 @@ function alarm_msg(parameter) {
 
 function deco_save(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `INSERT INTO alarm (user_key, msg, type) values (?, ?, 1)`;
+        const queryData = `INSERT INTO alarm (user_key, msg, type) values (?, ?, 5)`;
         db.query(queryData, [parameter.user_key, parameter.msg], (err, db_data) => {
             console.log(db_data);
             if(db_data) resolve(db_data);

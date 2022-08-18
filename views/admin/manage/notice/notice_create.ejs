@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wagle - 관리자 페이지</title>
+
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+    <style>
+        body{
+            background: #ff6400;
+            width: 850px;
+            margin: 0 auto;
+        }
+
+        header{
+            margin: 50px 0 10px 0;
+        }
+
+        header h1{
+            margin: 0;
+            color: #fff;
+            font-family: helvetica, arial;
+            text-align: center;
+            font-size: 400%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        header h1:hover{
+            color: #000;
+        }
+
+        header p{
+            position: relative;
+            top: -10px;
+            margin: 0;
+            text-align: right;
+            color: #fff;
+        }
+
+        header #admin_name{
+            display: inline-block;;
+            
+        }
+        header #logout_btn{
+            text-decoration: none;
+        }
+
+
+
+        .content_wrap{
+            width: 100%;
+            margin-bottom: 50px;
+        }
+
+        .content_title{
+            background-color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            border-radius: 15px;
+        }
+        .content_title span{
+            cursor: pointer;
+        }
+        .content_title span:hover{
+            font-weight: bold;
+        }
+        .content{
+            margin-top: 30px;
+            border: 1px solid #fff;
+            background-color: #fff;
+            padding: 3%;
+        }
+
+        .content .btn{
+            height: 100px;
+            margin-bottom: 30px;
+            
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+            grid-gap: 50px;
+        }
+        .content .btn button{
+            font-size: 130%;
+            color: #fff;
+            background-color: #ff6400;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .content .btn button:hover{
+            box-shadow: 0px 0px 15px #ff6400;
+        }
+
+
+
+        form input[type=text]{
+            display: block;
+            width: 100%;
+            height: 50px;
+            font-size: 150%;
+            margin-bottom: 30px;
+        }
+        form textarea{
+            display: block;
+            width: 100%;
+            height: 300px;
+            font-size: 150%;
+            margin-bottom: 30px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            resize: none;
+        }
+        form img{
+            width: 100%;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #ff6400;
+        }
+        form input[type=submit]{
+            width: 100%;
+            height: 70px;
+            font-size: 150%;
+            color: #fff;
+            border: none;
+            background-color: #ff6400;
+            cursor: pointer;
+        }
+        form input[type=submit]:hover{
+            box-shadow: 0px 0px 15px #ff6400;
+        }
+
+        
+
+
+    </style>
+
+    <script>
+        let admin_key = `<%= admin['admin_key'] %>`
+        let admin_name = `<%= admin['name'] %>`
+
+        
+        $(document).ready(function() {
+            $('#admin_name').text(admin_name)
+
+            pageMove();
+		});
+    </script>
+    
+</head>
+<body>
+    
+    <!-- #ff6400 -->
+
+    <body>
+        <header>
+            <h1 onclick="location.href='/admin'">Wagle</h1>
+            <p>
+                <span id="admin_name"></span>
+                <a href="/admin/login/logout" id="logout_btn">로그아웃</a>
+            </p>
+        </header>
+
+
+        <div class="content_wrap">
+            <div class="content_title">
+                <span onclick="location.href='/admin/manage/notice'">공지사항 관리</span>
+                - 공지사항
+            </div>
+            <div class="content">
+                
+                <form action="/admin/manage/notice/notice/create" method="post" enctype="multipart/form-data">
+                    <input type="text" name="title" required>
+                    <textarea name="content" required></textarea>
+                    <input type="file" accept="image/*" onchange="readURL(this)" name="img">
+                    <img id="preview">
+
+                    <input type="submit">
+                </form>
+
+
+                
+
+                
+
+
+
+            </div>
+        </div>
+
+
+
+
+        <script>
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    document.getElementById('preview').src = "";
+                }
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wagle - 관리자 페이지</title>
+
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+    <style>
+        body{
+            background: #ff6400;
+            width: 850px;
+            margin: 0 auto;
+        }
+
+        header{
+            margin: 50px 0 10px 0;
+        }
+
+        header h1{
+            margin: 0;
+            color: #fff;
+            font-family: helvetica, arial;
+            text-align: center;
+            font-size: 400%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        header h1:hover{
+            color: #000;
+        }
+
+        header p{
+            position: relative;
+            top: -10px;
+            margin: 0;
+            text-align: right;
+            color: #fff;
+        }
+
+        header #admin_name{
+            display: inline-block;;
+            
+        }
+        header #logout_btn{
+            text-decoration: none;
+        }
+
+
+
+        .content_wrap{
+            width: 100%;
+            margin-bottom: 50px;
+        }
+
+        .content_title{
+            background-color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            border-radius: 15px;
+        }
+        .content_title span{
+            cursor: pointer;
+        }
+        .content_title span:hover{
+            font-weight: bold;
+        }
+        .content{
+            margin-top: 30px;
+            border: 1px solid #fff;
+            background-color: #fff;
+            padding: 3%;
+        }
+        .content .btn{
+            height: 100px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr;
+            grid-gap: 50px;
+        }
+        .content .btn button{
+            font-size: 130%;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .content .btn button:hover{
+            box-shadow: 0px 0px 15px #ff6400;
+        }
+        .content .btn #update{
+            background-color: rgb(0, 174, 255);
+            color: #fff;
+        }
+        .content .btn #delete{
+            background-color: #f44;
+            color: #fff;
+        }
+
+
+
+        .content img{
+            width: 100%;
+            margin: 20px 0;
+        }
+
+    </style>
+
+    <script>
+        let admin_key = `<%= admin['admin_key'] %>`
+        let admin_name = `<%= admin['name'] %>`
+
+        let img_url = `/public/images/notice/`+`<%=read['notice_key']%>`+`.`+`<%=read['img']%>`;
+        
+        
+        $(document).ready(function() {
+            $('#admin_name').text(admin_name)
+		});
+    </script>
+    
+</head>
+<body>
+    
+    <!-- #ff6400 -->
+
+    <body>
+        <header>
+            <h1 onclick="location.href='/admin'">Wagle</h1>
+            <p>
+                <span id="admin_name"></span>
+                <a href="/admin/login/logout" id="logout_btn">로그아웃</a>
+            </p>
+        </header>
+
+
+        <div class="content_wrap">
+            <div class="content_title">
+                <span onclick="location.href='/admin/manage/notice'">공지사항 관리</span>
+                - 
+                <span onclick="location.href='/admin/manage/notice/qna'">문의사항</span>
+                (<%=read['notice_key']%>)
+            </div>
+
+            <div class="content">
+                <div class="btn">
+                    <button id="update">수정</button>
+                    <button id="delete">삭제</button>
+                </div>
+                              
+                <hr>
+
+                <h2><%=read['title']%></h2>
+                <p><%=read['content']%></p>
+                <small>작성자: <%=read['name']%> (<%=read['admin_key']%>)</small><br>
+                <small>게시일: <%=read['date']%></small><br>
+                <small>수정일: <%=read['date_update']%></small>
+                <script>
+                    console.log("<%=read['img']%>");
+                    if("<%=read['img']%>" != ""){
+                        document.write(`<img src=${img_url}>`)
+                    }
+                </script>
+                
+            </div>
+        </div>
+        
+        
+
+        <script>
+            let gb_delete = ()=>{
+                if(confirm("정말로 삭제하시겠습니까?")){
+                    let check = prompt("'삭제합니다'를 입력해주세요.");
+                    if(check === "삭제합니다"){
+                        location.href = `/admin/manage/guest/book/delete/<%=read['gb_key']%>`;
+                    } else {
+                        alert("잘못된 입력");
+                    }
+                }
+            }
+
+            let answer_display = () => {
+                if($('#answer').css('display') == 'block'){
+                    $('#answer').css('display', 'none');
+                } else{
+                    $('#answer').css('display', 'block');
+                }
+            }
+        </script>
+        
+    </body>
+</html>

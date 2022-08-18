@@ -43,26 +43,72 @@ async function accompany_main(req, res, next) {
     }
 }
 
+//추천 시스템에 필요한 정보 넘겨주기
+async function suggest_info(req, res, next) {
+    try {
+        const user_key = await accompanyDAO.read_user_key();
+
+        let entirety_user_key = [];
+        let entirety_accompany_tag = []; let entirety_profile_tag = [];
+
+        for(let i=0; i<user_key.length; i++) {
+            entirety_user_key.push(user_key[i].user_key);
+
+            let accompany_tag = []; let profile_tag = [];
+
+            let tags = await accompanyDAO.accompany_tag(user_key[i].user_key);
+            if(tags.length >= 2) {
+                for(let i=0; i<tags.length; i++) {
+                    accompany_tag.push(tags[i].tag)
+                }
+            }
+            else if (tags.length == 1) {
+                accompany_tag.push(tags[0].tag)
+            }
+            entirety_accompany_tag.push(accompany_tag);
+
+            tags = await accompanyDAO.profile_tag(user_key[i].user_key);
+            if(tags.length >= 2) {
+                for(let i=0; i<tags.length; i++) {
+                    profile_tag.push(tags[i].tag)
+                }
+            }
+            else if (tags.length == 1) {
+                profile_tag.push(tags[0].tag)
+            }
+            entirety_profile_tag.push(profile_tag);
+        }
+
+        res.json({ 
+            "entirety_user_key": entirety_user_key,
+            "entirety_accompany_tag": entirety_accompany_tag,
+            "entirety_profile_tag": entirety_profile_tag
+        });
+    } catch (err) {
+        res.send("추천 사용자 정보 불러오기 오류");
+    }
+}
+
 //추천 시스템
-// async function accompany_main_suggest(req, res, next) {
-//     try {
-//         // const user_key = req.params.user_key;
-//         const python_data = [7, 18, 23];
-//         const db_data = [];
+async function accompany_main_suggest(req, res, next) {
+    try {
+        const user_key = req.params.user_key;
+        const suggest_user = req.body.suggest_user;
+        let users_info = [];
 
-//         for(let i in python_data) {
-//             //사용자 동행 온도는 아직 SELECT 안함
-//             let data = await accompanyDAO.user_suggest(python_data[i]);
-//             db_data.push(data[0]);
-//         }
+        for(let i=0; i<suggest_user.length; i++) {
+            let user = await accompanyDAO.user_suggest(suggest_user[i]);
+            users_info.push(user);
+        }
 
-//         res.json({
-//             "db_data": db_data
-//         });
-//     } catch (err) {
-//         res.send("추천 시스템 오류");
-//     }
-// }
+        res.json({
+            "user_key": user_key,
+            "users_info": users_info
+        });
+    } catch (err) {
+        res.send("추천 시스템 오류");
+    }
+}
 
 async function companionPost_create(req, res, next) {
     try {
@@ -101,7 +147,7 @@ async function companionPost_create(req, res, next) {
 
             const msg = deco_data.content + " " + alarm_data;
 
-            const parameter = { user_key, msg };
+            const parameter = { user_key, msg,  };
             const insert_alarm_data = await alarmDAO.deco_save(parameter);
 
             res.send({ result: post_key, deco_data, alarm_data });
@@ -439,7 +485,8 @@ async function companionPost_createChat(req, res, next) {
 
 module.exports = {
     accompany_main,
-    // accompany_main_suggest,
+    suggest_info,
+    accompany_main_suggest,
     companionPost_create,
     host_accompany_chat,
     companionPost_update,

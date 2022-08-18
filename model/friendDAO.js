@@ -48,7 +48,7 @@ function remove_firend(parameter) {
 
 function show_friend_list(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `SELECT nickname FROM friend_list LEFT OUTER JOIN user ON friend_list.friend_2 = user.user_key WHERE accept = 1 AND friend_1 = ?`;
+        const queryData = `SELECT user_key, img, nickname FROM friend_list LEFT OUTER JOIN user ON friend_list.friend_2 = user.user_key WHERE accept = 1 AND friend_1 = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
             console.log(db_data);
             if(db_data) resolve(db_data);

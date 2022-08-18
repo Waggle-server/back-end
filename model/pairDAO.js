@@ -197,7 +197,7 @@ function load_photo(parameter) {
 function user_load_photo(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
-        const queryData = `SELECT nickname, user.img, pair.img FROM pair 
+        const queryData = `SELECT nickname, user.img as profile_img, pair.img FROM pair 
                            LEFT OUTER JOIN user ON pair.user_key = user.user_key 
                            where mate_key = ? AND pair.user_key = ? AND pair.img IS NOT NULL LIMIT ?, ?`;
         db.query(queryData, [parameter.mate_key, parameter.user_key, parameter.offset, parameter.limit], (err, db_data) => {

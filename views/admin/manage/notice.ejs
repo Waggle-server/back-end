@@ -26,6 +26,10 @@
             text-align: center;
             font-size: 400%;
             cursor: pointer;
+            transition: 0.3s;
+        }
+        header h1:hover{
+            color: #000;
         }
 
         header p{
@@ -110,16 +114,12 @@
         </header>
 
 
-        <div class="content_title">방명록 관리</div>
+        <div class="content_title">공지사항 관리</div>
 
         <div id="content_wrap">
-            <div class="content" onclick="location.href='/admin/manage/guest/place'">장소 등록</div>
-            <div class="content"  onclick="location.href='/admin/manage/guest/book'">방명록</div>
+            <div class="content" onclick="location.href='/admin/manage/notice/qna'">문의사항</div>
+            <div class="content"  onclick="location.href='/admin/manage/notice/notice'">공지사항</div>
         </div>
-
-        
-
-        
         
     </body>
 </html>
