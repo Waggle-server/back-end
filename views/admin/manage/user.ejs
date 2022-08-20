@@ -52,7 +52,6 @@
 
         .content_wrap{
             width: 100%;
-            height: 700px;
         }
 
         .content_title{
@@ -61,14 +60,44 @@
             padding: 20px 0;
             border-radius: 15px;
         }
+        .content_title span{
+            cursor: pointer;
+        }
+        .content_title span:hover{
+            font-weight: bold;
+        }
         .content{
             margin-top: 30px;
             border: 1px solid #fff;
-            height: 1000px;
+            background-color: #fff;
+            padding: 3%;
         }
         .content table{
             width: 100%;
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            text-align: center;
+
         }
+
+        .content table tr, .content table th, .content table td{
+            border: 1px solid #ccc;
+            padding: 1%;
+        }
+
+        .content table .book{
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .content table img{
+            width: 50px;
+            transition: 1s;
+        }
+        .content table img:active{
+            width: 400px;
+
+        }
+
 
 
     </style>
@@ -80,6 +109,8 @@
         
         $(document).ready(function() {
             $('#admin_name').text(admin_name)
+
+            pageMove();
 		});
     </script>
     
@@ -99,20 +130,91 @@
 
 
         <div class="content_wrap">
-            <div class="content_title">유저 관리</div>
+            <div class="content_title">
+                유저 관리
+            </div>
             <div class="content">
 
-                <table border="1">
-                    <tr>
-                        <td>profile image</td>
-                        <td>id</td>
-                        <td>nickname</td>
-                    </tr>
-
+                <table>
+                    <!-- <tr>
+                        <th>고유키</th>
+                        <th>id</th>
+                        <th>닉네임</th>
+                        <th>프로필 이미지</소>
+                    </tr> -->
                 </table>
+
+                <center>
+                    <button class="prev_btn" onclick="pageMove('prev')">이전</button>
+                    <button class="next_btn" onclick="pageMove('next')">다음</button>
+                </center>
+                
 
             </div>
         </div>
+
+        
+        <script>
+            let page = 0;
+            let cnt = 10;
+        
+            let table = document.getElementsByTagName("table")[0]
+            
+            const pageMove = function(move){
+                let table_inner = `<tr>
+                                    <th>고유키</th>
+                                    <th>카카오 id</th>
+                                    <th>닉네임</th>
+                                    <th>프로필 이미지</th>
+                                </tr>`;
+                if(move === 'prev'){
+                    page--;
+                } else if(move === 'next') {
+                    page++;
+                } else {
+                    page = 0;
+                }
+                
+                if(page < 0){
+                    page=0;
+                    alert("첫번째 페이지 입니다.")
+                }
+                if(page > cnt){
+                    page = cnt;
+                    alert("마지막 페이지 입니다.")
+                }
+        
+                $.ajax({
+                    type:'get',
+                    dataType:'json',
+                    url:`/admin/manage/user/list?page=${page}`,
+                    success : function(data) {
+                        const user = data.result;
+                        cnt = data.cnt;
+                        for(let i=0; i<user.length; i++){
+                            table_inner += `
+                            <tr>
+                                <td> 
+                                    ${user[i]['user_key']}
+                                </td>
+                                <td>
+                                    ${user[i]['id']}
+                                </td>
+                                <td> 
+                                    ${user[i]['nickname']}
+                                </td>
+                                <td>
+                                    <img src=${user[i]['img']}>
+                                </td>
+                            <tr>`
+                        }
+                        table.innerHTML = table_inner;
+                    },
+                    error : function(error) {
+                    }
+                });
+            }
+        </script>
 
         
 

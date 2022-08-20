@@ -172,8 +172,8 @@
             <div class="content">
                 
                 <form action="/admin/manage/notice/notice/create" method="post" enctype="multipart/form-data">
-                    <input type="text" name="title" required>
-                    <textarea name="content" required></textarea>
+                    <input type="text" name="title" placeholder="제목을 입력하세요" required>
+                    <textarea name="content" placeholder="내용을 입력하세요" required></textarea>
                     <input type="file" accept="image/*" onchange="readURL(this)" name="img">
                     <img id="preview">
 

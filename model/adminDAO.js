@@ -25,6 +25,31 @@ const admin_info = (parameters) =>{
 }
 
 
+const user_list = (parameters) =>{
+    return new Promise((resolve, reject) =>{
+        db.query(`SELECT * FROM user ORDER BY user_key DESC LIMIT ?, ?;`, [parameters.offset, parameters.limit], (err, db_data) => {
+            if(err) {
+                reject(err);
+            } else {
+                resolve(db_data);
+            }
+        })
+    })
+}
+const user_list_cnt = (parameters) =>{
+    return new Promise((resolve, reject) =>{
+        db.query(`SELECT COUNT(*) as cnt FROM user`, (err, db_data) => {
+            if(err) {
+                reject(err);
+            } else {
+                resolve(db_data);
+            }
+        })
+    })
+}
+
+
+
 const gp_list = (parameters) =>{
     return new Promise((resolve, reject) =>{
         db.query(`SELECT gp_key, user_key, (SELECT nickname from user  WHERE guestPlace.user_key=user.user_key) as nickname, place, DATE_FORMAT(date, '%Y-%m-%d %T') as date, accept
@@ -245,10 +270,37 @@ const notice_read = (parameters) =>{
     })
 }
 
+const notice_update = (parameters) =>{
+    return new Promise((resolve, reject) =>{
+        db.query(`UPDATE notice SET admin_key=?, title=?, content=? WHERE notice_key=?`, [parameters.admin_key, parameters.title, parameters.content, parameters.notice_key], (err, db_data) => {
+            if(err) {
+                reject(err);
+            } else {
+                resolve(db_data);
+            }
+        })
+    })
+}
+
+const notice_delete = (parameters) =>{
+    return new Promise((resolve, reject) =>{
+        db.query(`DELETE FROM notice WHERE notice_key=?;`, [parameters.notice_key], (err, db_data) => {
+            if(err) {
+                reject(err);
+            } else {
+                resolve(db_data);
+            }
+        })
+    })
+}
+
 
 module.exports = {
     admin_check,
     admin_info,
+
+    user_list,
+    user_list_cnt,
     
     gp_list,
     gp_list_cnt,
@@ -273,5 +325,7 @@ module.exports = {
     notice_list,
     notice_list_cnt,
     notice_create,
-    notice_read
+    notice_read,
+    notice_update,
+    notice_delete
 }

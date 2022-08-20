@@ -74,6 +74,25 @@ const manage_user = async (req, res) => {
     }
 }
 
+const manage_user_list = async (req, res) => {
+    let currentPage = req.query.page;
+    const pageSize = 10;
+    const page = paging(currentPage, pageSize);
+
+    const parameters = {
+        offset: page.offset,
+        limit: page.limit,
+    }
+
+    const pageCnt = await adminDAO.user_list_cnt();
+    const cnt = parseInt(pageCnt[0].cnt / pageSize);
+    console.log(pageCnt, cnt);
+
+    const db_data =  await adminDAO.user_list(parameters);
+
+    res.send({result:db_data, cnt});
+}
+
 
 // 방명록
 const manage_guest = async (req, res) => {
@@ -408,6 +427,46 @@ const manage_notice_notice_read = async (req, res) => {
 }
 
 
+const manage_notice_notice_update = async (req, res) => {
+    const parameters = {
+        admin_key: req.session.admin_key,
+        notice_key: req.params.notice_key
+    }
+    let admin_info = await adminDAO.admin_info(parameters);
+
+    const db_data = await adminDAO.notice_read(parameters);
+
+    if(req.session.admin_key){
+        res.render('../views/admin/manage/notice/notice_update.ejs', {admin: admin_info[0], read:db_data[0]});
+    } else{
+        res.send("<script>location.href='/admin/login';</script>");
+    }
+}
+
+const manage_notice_notice_update_process = async (req, res) => {
+    const parameters = {
+        admin_key: req.session.admin_key,
+        notice_key: req.params.notice_key,
+        title: req.body.title,
+        content: req.body.content,
+    }
+
+    await adminDAO.notice_update(parameters);
+
+    res.send(`<script>location.href='/admin/manage/notice/notice/read/${parameters.notice_key}';</script>`)
+}
+
+const manage_notice_notice_delete = async (req, res) => {
+    const parameters = {
+        notice_key: req.params.notice_key
+    }
+
+    await adminDAO.notice_delete(parameters);
+
+    res.send(`<script>alert("삭제 완료"); location.href='/admin/manage/notice/notice'</script>`);
+}
+
+
 
 module.exports = {
     login,
@@ -419,6 +478,7 @@ module.exports = {
 
 
     manage_user,
+    manage_user_list,
 
     manage_guest,
 
@@ -444,5 +504,8 @@ module.exports = {
     manage_notice_notice_list,
     manage_notice_notice_create,
     manage_notice_notice_create_process,
-    manage_notice_notice_read
+    manage_notice_notice_read,
+    manage_notice_notice_update,
+    manage_notice_notice_update_process,
+    manage_notice_notice_delete
 }

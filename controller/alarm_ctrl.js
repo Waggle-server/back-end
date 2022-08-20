@@ -15,6 +15,19 @@ async function alarm_main(req, res, next) {
     }
 }
 
+async function check_alarm(req, res, next) {
+    try {
+        const alarm_key = req.params.alarm_key;
+
+        const db_data = await alarmDAO.check_read(alarm_key);
+
+        res.send("success");
+    } catch (err) {
+        res.send("알림 확인 오류");
+    }
+}
+
 module.exports = {
-    alarm_main
+    alarm_main,
+    check_alarm
 }

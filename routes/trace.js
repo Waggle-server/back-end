@@ -4,8 +4,11 @@ const router = express.Router();
 const traceCtrl = require('../controller/traceCtrl');
 
 
-// 위도 lat 경도 long
+// 위도 lati 경도 longi
 
+
+router.post('/save', traceCtrl.save);
+router.get('/list', traceCtrl.list);
 
 
 

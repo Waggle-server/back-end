@@ -18,11 +18,13 @@ const guestBookRouter = require("./routes/guestBook");
 const traceRouter = require("./routes/trace");
 
 
+const mypageRouter = require("./routes/mypageRouter");
 const friendRouter = require("./routes/friendRouter");
 const chatRouter = require("./routes/chatRouter");
 const accompanyRouter = require("./routes/accompanyRouter");
 const pairRouter = require("./routes/pairRouter");
 const alarmRouter = require("./routes/alarmRouter");
+const decoRouter = require("./routes/decoRouter");
 
 
 const adminRouter = require("./routes/admin");
@@ -61,11 +63,13 @@ app.use("/trace", traceRouter);
 
 
 
+app.use("/mypage", mypageRouter);
 app.use("/friend", friendRouter);
 app.use("/chat", chatRouter);
 app.use("/accompany", accompanyRouter);
 app.use("/pair", pairRouter);
 app.use("/alarm", alarmRouter);
+app.use("/deco", decoRouter);
 
 
 

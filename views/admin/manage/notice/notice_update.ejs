@@ -73,16 +73,20 @@
             background-color: #fff;
             padding: 3%;
         }
+
         .content .btn{
             height: 100px;
             margin-bottom: 30px;
+            
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             grid-template-rows: 1fr;
             grid-gap: 50px;
         }
         .content .btn button{
             font-size: 130%;
+            color: #fff;
+            background-color: #ff6400;
             border: none;
             cursor: pointer;
             transition: 0.3s;
@@ -90,21 +94,46 @@
         .content .btn button:hover{
             box-shadow: 0px 0px 15px #ff6400;
         }
-        .content .btn #update{
-            background-color: rgb(0, 174, 255);
-            color: #fff;
-        }
-        .content .btn #delete{
-            background-color: #f44;
-            color: #fff;
-        }
 
 
 
-        .content img{
+        form input[type=text]{
+            display: block;
             width: 100%;
-            margin: 20px 0;
+            height: 50px;
+            font-size: 150%;
+            margin-bottom: 30px;
         }
+        form textarea{
+            display: block;
+            width: 100%;
+            height: 300px;
+            font-size: 150%;
+            margin-bottom: 30px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            resize: none;
+        }
+        form img{
+            width: 100%;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #ff6400;
+        }
+        form input[type=submit]{
+            width: 100%;
+            height: 70px;
+            font-size: 150%;
+            color: #fff;
+            border: none;
+            background-color: #ff6400;
+            cursor: pointer;
+        }
+        form input[type=submit]:hover{
+            box-shadow: 0px 0px 15px #ff6400;
+        }
+
+        
+
 
     </style>
 
@@ -113,10 +142,12 @@
         let admin_name = `<%= admin['name'] %>`
 
         let img_url = `/public/images/notice/`+`<%=read['notice_key']%>`+`.`+`<%=read['img']%>`;
-        
+
         
         $(document).ready(function() {
             $('#admin_name').text(admin_name)
+
+            pageMove();
 		});
     </script>
     
@@ -138,48 +169,49 @@
         <div class="content_wrap">
             <div class="content_title">
                 <span onclick="location.href='/admin/manage/notice'">공지사항 관리</span>
-                - 
-                <span onclick="location.href='/admin/manage/notice/notice'">공지사항</span>
-                (<%=read['notice_key']%>)
+                - <span onclick="location.href='/admin/manage/notice/notice'">공지사항</span>
             </div>
-
             <div class="content">
-                <div class="btn">
-                    <button id="update" onclick="location.href=`/admin/manage/notice/notice/update/<%=read['notice_key']%>`">수정</button>
-                    <button id="delete" onclick="notice_delete()">삭제</button>
-                </div>
-                              
-                <hr>
-
-                <h2><%=read['title']%></h2>
-                <p><%=read['content']%></p>
-                <small>작성자: <%=read['name']%> (<%=read['admin_key']%>)</small><br>
-                <small>게시일: <%=read['date']%></small><br>
-                <small>수정일: <%=read['date_update']%></small>
-                <script>
-                    console.log("<%=read['img']%>");
-                    if("<%=read['img']%>" != ""){
-                        document.write(`<img src=${img_url}>`)
-                    }
-                </script>
                 
+                <form action="/admin/manage/notice/notice/update/<%=read['notice_key']%>" method="post" >
+                    <input type="text" name="title" placeholder="제목을 입력하세요" value="<%=read['title']%>" required>
+                    <textarea name="content" placeholder="내용을 입력하세요" required><%=read['content']%></textarea>
+                    
+                    
+                    <script>
+                        if("<%=read['img']%>" != ""){
+                            document.write(`<p style="color: #f00;">이미지는 수정할 수 없습니다.</p> <img id="preview" src=${img_url}>`)
+                        }
+                    </script>
+
+                    <input type="submit">
+                </form>
+
+
+                
+
+                
+
+
+
             </div>
         </div>
-        
-        
+
+
+
 
         <script>
-            let notice_delete = ()=>{
-                if(confirm("정말로 삭제하시겠습니까?")){
-                    let check = prompt("'삭제합니다'를 입력해주세요.");
-                    if(check === "삭제합니다"){
-                        location.href = `/admin/manage/notice/notice/delete/<%=read['notice_key']%>`;
-                    } else {
-                        alert("잘못된 입력");
-                    }
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    document.getElementById('preview').src = "";
                 }
             }
         </script>
-        
     </body>
 </html>

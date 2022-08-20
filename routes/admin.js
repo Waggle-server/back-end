@@ -14,6 +14,7 @@ router.get('/login/logout', adminCtrl.logout_process)
 
 // manage
 router.get('/manage/user', adminCtrl.manage_user);
+router.get('/manage/user/list', adminCtrl.manage_user_list);
 
 router.get('/manage/guest', adminCtrl.manage_guest);
 router.get('/manage/guest/place', adminCtrl.manage_gp);
@@ -43,6 +44,9 @@ router.post('/manage/notice/notice/create',
     adminCtrl.manage_notice_notice_create_process
 );
 router.get('/manage/notice/notice/read/:notice_key', adminCtrl.manage_notice_notice_read);
+router.get('/manage/notice/notice/update/:notice_key', adminCtrl.manage_notice_notice_update);
+router.post('/manage/notice/notice/update/:notice_key', adminCtrl.manage_notice_notice_update_process);
+router.get('/manage/notice/notice/delete/:notice_key', adminCtrl.manage_notice_notice_delete);
 
 
 router.get('/', adminCtrl.main);
