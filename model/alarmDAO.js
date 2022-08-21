@@ -1,6 +1,6 @@
 "use strict";
 
-const db = require("../config/dbconn");
+const {db} = require("../config/dbconn");
 
 function chating_save(parameter) {
     return new Promise((resolve, reject) => {

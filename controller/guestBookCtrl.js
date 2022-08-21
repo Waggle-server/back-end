@@ -17,7 +17,7 @@ const gbSearch = async (req, res) => {
         search: (req.query.search == undefined) ? "" : req.query.search,
         offset: page.offset,
         limit: page.limit,
-        user_key: (!isNaN(req.get('user_key'))) ? req.get('user_key') : null
+        user_key: (req.get('user_key') != "" && !isNaN(req.get('user_key'))) ? null : req.get('user_key')
     }
 
     console.log(parameters);
@@ -43,7 +43,7 @@ const gbRead = async (req, res) => {
         gb_key: req.params.num
     }
     try {
-        parameters.user_key = req.get('user_key')
+        parameters.user_key = (req.get('user_key') != "" && !isNaN(req.get('user_key'))) ? null : req.get('user_key')
 
         const db_data = await guestBookDAO.gbRead(parameters);
 
@@ -104,7 +104,7 @@ const gbCreate = async (req, res) => {
 
     let parameters = {
         gp_key: req.body.gp_key,
-        user_key: req.session.user_key,
+        user_key: (req.get('user_key') != "" && !isNaN(req.get('user_key'))) ? null : req.get('user_key'),
         comment: req.body.comment,
         img: (imgFile != undefined) ? (imgFile.originalname).split('.')[1] : undefined
     }
@@ -181,7 +181,7 @@ const gbDelete = async (req, res) => {
 const gbHeart = async (req, res) => {
     const parameters = {
         gb_key: req.body.gb_key,
-        user_key: req.get('user_key')
+        user_key: (req.get('user_key') != "" && !isNaN(req.get('user_key'))) ? null : req.get('user_key')
     }
     console.log(req.body)
     try {

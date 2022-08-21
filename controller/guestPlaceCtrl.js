@@ -69,7 +69,7 @@ const gpCreate = async (req, res) => {
         place: req.body.place,
         address: req.body.address,
         des: req.body.des,
-        img: (imgFile.originalname).split('.')[1]
+        img: (imgFile != "" && imgFile != undefined) ? (imgFile.originalname).split('.')[1] : null
     }
 
     console.log(parameters);
@@ -77,7 +77,7 @@ const gpCreate = async (req, res) => {
     try {
         if(parameters.user_key != null){
             // 선 - 이미지 업로드, 후 - key값으로 rename
-            if(imgFile != undefined){
+            if(imgFile != null){
 
                 const db_data = await guestPlaceDAO.gpCreate(parameters);
                 const gp_key = db_data.insertId

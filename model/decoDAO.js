@@ -1,6 +1,6 @@
 "use strict";
 
-const db = require("../config/dbconn");
+const {db} = require("../config/dbconn");
 
 function read_deco_list() {
     return new Promise((resolve, reject) => {
