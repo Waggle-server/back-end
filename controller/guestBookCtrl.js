@@ -17,7 +17,7 @@ const gbSearch = async (req, res) => {
         search: (req.query.search == undefined) ? "" : req.query.search,
         offset: page.offset,
         limit: page.limit,
-        user_key: (req.get('user_key') != "" && !isNaN(req.get('user_key'))) ? null : req.get('user_key')
+        user_key: (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null 
     }
 
     console.log(parameters);
@@ -43,7 +43,7 @@ const gbRead = async (req, res) => {
         gb_key: req.params.num
     }
     try {
-        parameters.user_key = (req.get('user_key') != "" && !isNaN(req.get('user_key'))) ? null : req.get('user_key')
+        parameters.user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null 
 
         const db_data = await guestBookDAO.gbRead(parameters);
 
