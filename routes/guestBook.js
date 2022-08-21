@@ -24,6 +24,8 @@ router.get('/read/myList/:num', guestBookCtrl.gbMyList);
 //num: gb_key
 router.get('/read/:num', guestBookCtrl.gbRead);            
 
+// 깃 테스트용
+let aaa = 123;
 
 router.post('/create', 
     multer.upload('guestBook').single('img'),
