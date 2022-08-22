@@ -10,7 +10,7 @@ const { paging } = require('./tool/paging');
 // 메인화면, 검색 - 10개씩 스크롤 페이징
 const gbSearch = async (req, res) => {
     let currentPage = req.query.page;
-    const pageSize = 10;
+    const pageSize = 20;
     const page = paging(currentPage, pageSize);
 
     const parameters = {
@@ -63,7 +63,7 @@ const gbRead = async (req, res) => {
 const gbList = async (req, res) => {
 
     let currentPage = req.query.page;
-    const pageSize = 10;
+    const pageSize = 20;
     const page = paging(currentPage, pageSize);
 
     const parameters = {
@@ -82,7 +82,7 @@ const gbList = async (req, res) => {
 
 const gbMyList = async (req, res) => {
     let currentPage = req.query.page;
-    const pageSize = 10;
+    const pageSize = 20;
     const page = paging(currentPage, pageSize);
 
     const parameters = {
