@@ -104,7 +104,7 @@ const gbCreate = async (req, res) => {
 
     let parameters = {
         gp_key: req.body.gp_key,
-        user_key: (req.get('user_key') != "" && !isNaN(req.get('user_key'))) ? null : req.get('user_key'),
+        user_key: (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null,
         comment: req.body.comment,
         img: (imgFile != undefined) ? (imgFile.originalname).split('.')[1] : undefined
     }
@@ -181,7 +181,7 @@ const gbDelete = async (req, res) => {
 const gbHeart = async (req, res) => {
     const parameters = {
         gb_key: req.body.gb_key,
-        user_key: (req.get('user_key') != "" && !isNaN(req.get('user_key'))) ? null : req.get('user_key')
+        user_key: (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null
     }
     console.log(req.body)
     try {
