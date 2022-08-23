@@ -19,7 +19,7 @@ const gpRank = async (req, res) => {
 const gpSearch = async (req, res) => {
     const parameters = {
         search: (req.query.search == undefined) ? "" : req.query.search,
-        user_key: req.get('user_key')
+        user_key: (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null
     }
     try {
         const db_data = await guestPlaceDAO.gpSearch(parameters);
@@ -44,7 +44,7 @@ const gpRead = async (req, res) => {
     try {
         const db_data = await guestPlaceDAO.gpRead(parameters);
 
-        parameters.user_key = req.get('user_key')
+        parameters.user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null
 
         // 로그
         if(db_data.length != 0 && parameters.user_key != null){
@@ -65,7 +65,7 @@ const gpCreate = async (req, res) => {
     const imgFile = req.file;
 
     const parameters = {
-        user_key: req.get('user_key'),
+        user_key: (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null,
         place: req.body.place,
         address: req.body.address,
         des: req.body.des,
@@ -131,7 +131,7 @@ const gpDelete = async (req, res) => {
 const gpHeart = async (req, res) => {
     const parameters = {
         gp_key: req.body.gp_key,
-        user_key: req.get('user_key'),
+        user_key: (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null,
     }
     
     try {
