@@ -142,7 +142,7 @@ function read_upload_post(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
         const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
-        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_update
+        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
         FROM accompany
         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
         ORDER BY date_update DESC LIMIT ?, ?`;
@@ -158,7 +158,7 @@ function read_closing_post(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
         const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
-        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_update
+        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
         FROM accompany
         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
         ORDER BY date_update ASC LIMIT ?, ?`;
@@ -172,7 +172,7 @@ function read_closing_post(parameter) {
 
 function companion_postR(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `SELECT nickname, img, title, des, personnel, tag, date_upload, date_update FROM accompany LEFT OUTER JOIN user ON accompany.user_key = user.user_key Where post_key = ?`;
+        const queryData = `SELECT nickname, img, title, des, personnel, tag, date_format(date_upload, '%Y-%m-%d %T') as date_upload, date_format(date_update, '%Y-%m-%d %T') as date_update FROM accompany LEFT OUTER JOIN user ON accompany.user_key = user.user_key Where post_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
             console.log(db_data);
             if(db_data) resolve(db_data);
@@ -184,7 +184,7 @@ function companion_postR(parameter) {
 function companion_postR_A_real_time(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
-                        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_update
+                        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
                         FROM accompany
                         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
                         ORDER BY date_update DESC LIMIT ?, ?`;
@@ -199,7 +199,7 @@ function companion_postR_A_real_time(parameter) {
 function companion_postR_A_closing(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
-        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_update
+        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
         FROM accompany
         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
         ORDER BY date_update ASC LIMIT ?, ?`;
@@ -237,7 +237,7 @@ function companion_search_user(parameter) {
 function companion_search_area(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
-        const queryData = `SELECT accompany.user_key, nickname, img, title, des, personnel, date_update FROM accompany 
+        const queryData = `SELECT accompany.user_key, nickname, img, title, des, personnel, date_format(date_update, '%Y-%m-%d %T') as date_update FROM accompany 
                         LEFT OUTER JOIN user ON accompany.user_key = user.user_key where title LIKE ? LIMIT ?, ?`;
         db.query(queryData, [`%${parameter.search_area}%`, parameter.offset, parameter.limit], (err, db_data) => {
             console.log(db_data);
