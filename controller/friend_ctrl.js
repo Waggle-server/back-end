@@ -29,7 +29,10 @@ async function req_friend(req, res, next) {
 
         const alarm_key = db_data.insertId;
 
-        res.send({ result: db_data, data, alarm_key });
+        let sent_data = await alarmDAO.get_data_key(alarm_key);
+        sent_data = sent_data[0];
+
+        res.send({ data, sent_data, alarm_key });
     } catch (err) {
         res.send("사용자를 찾을 수 없습니다.");
     }
@@ -52,7 +55,6 @@ async function res_friend(req, res, next) {
             
             const friend_res_data = await alarmDAO.friend_res_alarm(user_key);
             data = friend_res_data[0].nickname;
-            img = friend_res_data[0].img;
 
             const alarm_data = await alarmDAO.alarm_content(2);
             data = data + " " + alarm_data[0].msg;
@@ -64,12 +66,15 @@ async function res_friend(req, res, next) {
 
             const alarm_key = db_data.insertId;
 
-            res.send({ result: db_data, data, alarm_key });
+            let sent_data = await alarmDAO.get_data_key(alarm_key);
+            sent_data = sent_data[0];
+
+            res.send({ data, sent_data, alarm_key });
         }
 
         if (answer == "거절") {
             const db_data_3 = await friendDAO.remove_firend(parameter);
-            res.send("success");
+            res.send({ result: "success" });
         }
     } catch (err) {
         res.send("응답 작동 오류");
@@ -79,7 +84,7 @@ async function res_friend(req, res, next) {
 //친구 맺어진 리스트 get
 async function list_friend(req, res, next) {
     try {
-        const user_key = req.params.user_key
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const db_data = await friendDAO.show_friend_list(user_key);
         res.json({
             "db_data": db_data
@@ -104,7 +109,7 @@ async function del_friend(req, res, next) {
 
         const db_data_1 = await friendDAO.remove_firend(parameter_1);
         const db_data_2 = await friendDAO.remove_firend(parameter_2);
-        res.send("success");
+        res.send({ result: "success" });
     } catch (err) {
         res.send("사용자 삭제 오류");
     }
@@ -113,7 +118,7 @@ async function del_friend(req, res, next) {
 //친구 채팅
 async function chat_friend(req, res, next) {
     try {
-        const user_key = req.params.user_key;
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const friend_key = req.params.friend_key;
         let load_name = await chatDAO.listC_load_name(friend_key);
         load_name = load_name[0].nickname;

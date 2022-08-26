@@ -10,7 +10,7 @@ const gpRank = async (req, res) => {
     try {
         const db_data = await guestPlaceDAO.gpRank();
         res.send({result : db_data});
-    } catch (err) {
+    } catch (err) {0
         console.log(err);
     }
 }

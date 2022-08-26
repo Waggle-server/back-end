@@ -316,6 +316,16 @@ function count_user(parameter) {
     })
 }
 
+function count_share(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT count(user_key) as user_key_cnt FROM pair where user_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
 module.exports = {
     load_user_key,
     load_user_id,
@@ -342,5 +352,6 @@ module.exports = {
     end_of_trip,
     type_zero,
     get_mate_user,
-    count_user
+    count_user,
+    count_share
 }

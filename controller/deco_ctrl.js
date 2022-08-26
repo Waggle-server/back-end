@@ -16,7 +16,7 @@ async function show_deco_list(req, res, next) {
 
 async function show_my_deco(req, res, next) {
     try {
-        const user_key = req.params.user_key;
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const db_data = await decoDAO.read_user_deco(user_key);
 
         res.json({

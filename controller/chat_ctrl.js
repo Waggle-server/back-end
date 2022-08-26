@@ -4,7 +4,7 @@ const chatDAO = require("../model/chatDAO");
 
 async function chat_list_read(req, res, next) {
     try {
-        const user_key = req.params.user_key;
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const db_data = await chatDAO.chat_listR(user_key);
         res.json({
             "db_data": db_data

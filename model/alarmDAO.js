@@ -56,7 +56,7 @@ function alarm_main_page(parameter) {
 function friend_req_alarm(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT nickname FROM friend_list 
-                           LEFT OUTER JOIN user ON friend_list.friend_2 = user.user_key 
+                           LEFT OUTER JOIN user ON friend_list.friend_1 = user.user_key 
                            where friend_1 = ? AND accept = 0`;
         db.query(queryData, [parameter], (err, db_data) => {
             console.log(db_data);
@@ -68,9 +68,21 @@ function friend_req_alarm(parameter) {
 
 function friend_res_alarm(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `SELECT nickname, img FROM friend_list LEFT OUTER JOIN user ON friend_list.friend_2 = user.user_key where user_key = ? AND accept = 1 ORDER BY join_key DESC LIMIT 1`;
+        const queryData = `SELECT nickname FROM friend_list
+                           LEFT OUTER JOIN user ON friend_list.friend_1 = user.user_key
+                           where friend_1 = ? AND accept = 1`;
         db.query(queryData, [parameter], (err, db_data) => {
             console.log(db_data);
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
+function get_data_key(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT data_key, img as friend_img FROM alarm LEFT OUTER JOIN user ON alarm.user_key = user.user_key where alarm_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -124,6 +136,7 @@ module.exports = {
     chating_save,
     friend_req_save,
     friend_res_save,
+    get_data_key,
     alarm_main_page,
     friend_req_alarm,
     friend_res_alarm,

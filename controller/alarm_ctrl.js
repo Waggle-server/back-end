@@ -4,7 +4,7 @@ const alarmDAO = require("../model/alarmDAO");
 
 async function alarm_main(req, res, next) {
     try {
-        const user_key = req.params.user_key;
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const db_data = await alarmDAO.alarm_main_page(user_key);
 
         res.json({
@@ -21,7 +21,7 @@ async function check_alarm(req, res, next) {
 
         const db_data = await alarmDAO.check_read(alarm_key);
 
-        res.send("success");
+        res.send({ result: "success" });
     } catch (err) {
         res.send("알림 확인 오류");
     }

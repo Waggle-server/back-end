@@ -43,56 +43,10 @@ async function accompany_main(req, res, next) {
     }
 }
 
-//추천 시스템에 필요한 정보 넘겨주기
-// async function suggest_info(req, res, next) {
-//     try {
-//         const user_key = await accompanyDAO.read_user_key();
-
-//         let entirety_user_key = [];
-//         let entirety_accompany_tag = []; let entirety_profile_tag = [];
-
-//         for(let i=0; i<user_key.length; i++) {
-//             entirety_user_key.push(user_key[i].user_key);
-
-//             let accompany_tag = []; let profile_tag = [];
-
-//             let tags = await accompanyDAO.accompany_tag(user_key[i].user_key);
-//             if(tags.length >= 2) {
-//                 for(let i=0; i<tags.length; i++) {
-//                     accompany_tag.push(tags[i].tag)
-//                 }
-//             }
-//             else if (tags.length == 1) {
-//                 accompany_tag.push(tags[0].tag)
-//             }
-//             entirety_accompany_tag.push(accompany_tag);
-
-//             tags = await accompanyDAO.profile_tag(user_key[i].user_key);
-//             if(tags.length >= 2) {
-//                 for(let i=0; i<tags.length; i++) {
-//                     profile_tag.push(tags[i].tag)
-//                 }
-//             }
-//             else if (tags.length == 1) {
-//                 profile_tag.push(tags[0].tag)
-//             }
-//             entirety_profile_tag.push(profile_tag);
-//         }
-
-//         res.json({ 
-//             "entirety_user_key": entirety_user_key,
-//             "entirety_accompany_tag": entirety_accompany_tag,
-//             "entirety_profile_tag": entirety_profile_tag
-//         });
-//     } catch (err) {
-//         res.send("추천 사용자 정보 불러오기 오류");
-//     }
-// }
-
 // 추천 시스템
 async function accompany_main_suggest(req, res, next) {
     try {
-        const user_key = req.params.user_key;
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const suggest_user = req.body.suggest_user;
         let users_info = [];
 
@@ -112,8 +66,7 @@ async function accompany_main_suggest(req, res, next) {
 
 async function companionPost_create(req, res, next) {
     try {
-        // const user_key = req.get('user_key');
-        const user_key = req.body.user_key;
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const title = req.body.title;
         const des = req.body.des;
         const personnel = req.body.personnel;
@@ -202,7 +155,6 @@ async function companionPost_create(req, res, next) {
             res.send({ result: post_key });
         }
     } catch (err) {
-        console.log(err)
         res.send("게시글 업로드 오류");
     }
 }
@@ -210,7 +162,7 @@ async function companionPost_create(req, res, next) {
 async function host_accompany_chat(req, res, next) {
     try {
         const post_key = req.params.post_key;
-        const user_key = req.params.user_key;
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
 
         const accompany_data = await accompanyDAO.accompany_info(post_key);
         const insert_accompany_data = await chatDAO.chat_listC_host(accompany_data[0]);
@@ -227,7 +179,7 @@ async function host_accompany_chat(req, res, next) {
 async function companionPost_update(req, res, next) {
     try {
         const post_key = req.params.post_key;
-        const user_key = req.body.user_key;
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const title = req.body.title;
         const des = req.body.des;
         const personnel = req.body.personnel;
@@ -248,7 +200,7 @@ async function companionPost_update(req, res, next) {
 
         const db_data = await accompanyDAO.companion_postU(parameter);
         
-        res.send("success");
+        res.send({ result: "success" });
     } catch (err) {
         res.send("게시글 업데이트 오류");
     }
@@ -257,7 +209,7 @@ async function companionPost_update(req, res, next) {
 async function companionPost_delete(req, res, next) {
     try {
         const post_key = req.params.post_key;
-        const user_key = req.params.user_key;
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         //post를 한 사람의 user_key 불러오기
         let writer = await accompanyDAO.companion_postD_check_identity(post_key);
         writer = writer[0].user_key;
@@ -270,7 +222,7 @@ async function companionPost_delete(req, res, next) {
         if(check == 0 || ( (user_key) == (writer)  )) {
             const db_data = await accompanyDAO.companion_postD(post_key);
         }
-        res.send("success");
+        res.send({ result: "success" });
     } catch (err) {
         res.send("권한이 없습니다.");
     }
@@ -336,12 +288,8 @@ async function companionPost_read_A_closing(req, res, next) {
 
 async function profile_detail(req, res, next) {
     try {
-        const user_key = req.params.user_key;
-
-        //mypage 짜고 거기 있는 정보 가져와서
-        //프로필 디테일 보여주는 과정 필요
-
-        const db_data = await accompanyDAO.companion_detail(user_key);
+        const companion_key = req.params.companion_key;
+        const db_data = await accompanyDAO.companion_detail(companion_key);
         res.json({
             "db_data": db_data
         });
@@ -398,7 +346,7 @@ async function companionPost_search_area(req, res, next) {
 async function companionPost_Deadline_Btn(req, res, next) {
     try {
         const post_key = req.params.post_key;
-        const host = req.params.user_key;
+        const host = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const mate_key = await pairDAO.load_user_key(post_key);
         const mate_length = mate_key.length;
 
@@ -506,7 +454,7 @@ async function companionPost_Deadline_Btn(req, res, next) {
 async function companionPost_createChat(req, res, next) {
     try {
         const post_key = req.params.post_key;
-        const user_key = req.params.user_key;
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         let db_data = await chatDAO.chat_list_key(post_key);
         db_data = db_data[0];
 
@@ -518,7 +466,6 @@ async function companionPost_createChat(req, res, next) {
 
 module.exports = {
     accompany_main,
-    // suggest_info,
     accompany_main_suggest,
     companionPost_create,
     host_accompany_chat,
