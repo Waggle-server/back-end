@@ -52,7 +52,11 @@ const gpAccept = (parameters) =>{
 const gpRank = (parameters) =>{
     return new Promise((resolve, reject) =>{
         db.query(
+<<<<<<< HEAD
             `SELECT guestPlace.gp_key, place, address, SUM(heart) AS heart, img FROM guestPlace
+=======
+            `SELECT guestPlace.gp_key, place, address, SUM(heart) AS heart, img  FROM guestPlace
+>>>>>>> 1d2f1d8b1c74ff974c1e34cb25d1d2c5d4714f86
             LEFT JOIN guestPlace_heart ON guestPlace.gp_key=guestPlace_heart.gp_key
             WHERE accept=true  
             GROUP BY guestPlace.gp_key ORDER BY heart DESC LIMIT 10;`, (err, db_data) => {

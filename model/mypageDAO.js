@@ -4,8 +4,13 @@ const {db} = require("../config/dbconn");
 
 function first_login_getInfo(parameter) {
     return new Promise((resolve, reject) => {
+<<<<<<< HEAD
         const queryData = `INSERT INTO user_detail(user_key, nickname, sex, tag, mbti, intro) values (?, ?, ?, ?, ?, ?)`;
         db.query(queryData, [parameter.user_key, parameter.nickname, parameter.sex, parameter.tags, parameter.intro], (err, db_data) => {
+=======
+        const queryData = `INSERT INTO user_detail(user_key, intro, sex, mbti, tag) values (?, ?, ?, ?, ?)`;
+        db.query(queryData, [parameter.user_key, parameter.intro, parameter.sex, parameter.mbti, parameter.tags], (err, db_data) => {
+>>>>>>> 1d2f1d8b1c74ff974c1e34cb25d1d2c5d4714f86
             if(db_data) resolve(db_data);
             else reject(err);
         })

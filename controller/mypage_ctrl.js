@@ -34,6 +34,7 @@ async function profile_modify(req, res, next) {
         const intro = req.body.intro;
         const tags = req.body.tags;
 
+<<<<<<< HEAD
         if (sex == "여자") sex = 1
         else if (sex == "남자") sex = 2
         
@@ -43,6 +44,9 @@ async function profile_modify(req, res, next) {
         db_data = await mypageDAO.user_detail_profile_modify(detail_parameter);
 
         res.send({ result: "success" });
+=======
+        res.send({result : "success"});
+>>>>>>> 1d2f1d8b1c74ff974c1e34cb25d1d2c5d4714f86
     } catch(err) {
         res.send("사용자 정보 수정 오류");
     }
