@@ -64,7 +64,7 @@ const gbList = (parameters) =>{
 const gbMyList = (parameters) =>{
     return new Promise((resolve, reject) =>{
         db.query(
-            `SELECT gb_key, guestBook.gp_key, guestBook.img, place 
+            `SELECT gb_key, guestBook.gp_key, guestBook.img, place, comment 
             FROM guestBook
             LEFT JOIN guestPlace ON guestBook.gp_key=guestPlace.gp_key
             WHERE guestBook.user_key=?

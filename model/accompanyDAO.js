@@ -199,10 +199,20 @@ function companion_postR_A_real_time(parameter) {
 function companion_postR_A_closing(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
-        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
+        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel,
+        date_format(date_update, '%Y-%m-%d %T') as date_update
         FROM accompany
         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
-        ORDER BY date_update ASC LIMIT ?, ?`;
+        ORDER BY CASE when (accompany.personnel-count_personnel)=1 then 1 
+                      when (accompany.personnel-count_personnel)=2 then 2 
+                      when (accompany.personnel-count_personnel)=3 then 3 
+                 when (accompany.personnel-count_personnel)=4 then 4
+                      when (accompany.personnel-count_personnel)=5 then 5
+                      when (accompany.personnel-count_personnel)=6 then 6
+                      when (accompany.personnel-count_personnel)=7 then 7
+                      when (accompany.personnel-count_personnel)=8 then 8
+                      when (accompany.personnel-count_personnel)=9 then 9
+                      ELSE 10 END, date_update ASC LIMIT ?, ?`;
         db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
             console.log(db_data);
             if(db_data) resolve(db_data);

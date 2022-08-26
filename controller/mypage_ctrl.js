@@ -16,7 +16,7 @@ async function profile_modify(req, res, next) {
         let db_data = await mypageDAO.profile_modify(parameter);
         db_data = await mypageDAO.user_info_modify(parameter);
 
-        res.send("success");
+        res.send({result : "success"});
     } catch(err) {
         res.send("사용자 정보 수정 오류");
     }

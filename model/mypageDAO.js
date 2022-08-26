@@ -4,8 +4,8 @@ const {db} = require("../config/dbconn");
 
 function profile_modify(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `INSERT INTO user_detail(user_key, intro, sex, email, mbti, tags) values (?, ?, ?, ?, ?, ?)`;
-        db.query(queryData, [parameter.user_key, parameter.intro, parameter.sex, parameter.email, parameter.mbti, parameter.tags], (err, db_data) => {
+        const queryData = `INSERT INTO user_detail(user_key, intro, sex, mbti, tag) values (?, ?, ?, ?, ?)`;
+        db.query(queryData, [parameter.user_key, parameter.intro, parameter.sex, parameter.mbti, parameter.tags], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);
         })
