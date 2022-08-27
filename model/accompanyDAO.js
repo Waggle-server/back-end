@@ -142,7 +142,7 @@ function read_upload_post(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
         const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
-        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
+        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel != 0)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
         FROM accompany
         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
         ORDER BY date_update DESC LIMIT ?, ?`;
@@ -158,7 +158,7 @@ function read_closing_post(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
         const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
-        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
+        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel != 0)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
         FROM accompany
         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
         ORDER BY date_update ASC LIMIT ?, ?`;
@@ -184,7 +184,7 @@ function companion_postR(parameter) {
 function companion_postR_A_real_time(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT accompany.user_key, post_key, nickname, img, title, des, accompany.personnel,
-                        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel IS NOT NULL)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
+                        (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel != 0)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
                         FROM accompany
                         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
                         ORDER BY date_update DESC LIMIT ?, ?`;
