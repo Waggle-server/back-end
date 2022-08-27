@@ -71,10 +71,14 @@ async function companionPost_create(req, res, next) {
         const des = req.body.des;
         const personnel = req.body.personnel;
         const tags = req.body.tags;
-        const parameter = { user_key, title, des, personnel, tags };
+        let parameter = { user_key, title, des, personnel, tags };
 
         const db_data = await accompanyDAO.companion_postC(parameter);
         const post_key = db_data.insertId;
+
+        const accompany_data = await accompanyDAO.accompany_info(post_key);
+        const insert_accompany_data = await chatDAO.chat_listC_host(accompany_data[0]);
+
 
         if(tags) {
             const tag = tags.split(', ');
@@ -86,6 +90,8 @@ async function companionPost_create(req, res, next) {
                 const tag_data = await accompanyDAO.insert_tag(tag_parameter);
             };
         }
+
+
 
         const count_post = await accompanyDAO.count_post(user_key);
         let send_deco;
