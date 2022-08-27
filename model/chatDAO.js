@@ -10,7 +10,6 @@ function chat_listR(parameter) {
                            LEFT OUTER JOIN accompany on chat_list.post_key = accompany.post_key
                            where chat_list.user_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -25,7 +24,6 @@ function chat_read_each(parameter) {
         LEFT OUTER JOIN user on chating.user_key = user.user_key
         where room_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -38,7 +36,6 @@ function chat_listR_socket(parameter) {
         console.log("db start p")
         const queryData = `SELECT room_key, post_key, title, type FROM chat_list where type = 2 AND user_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -51,7 +48,6 @@ function chat_list_key(parameter) {
         console.log("db start p")
         const queryData = `SELECT DISTINCT room_key, post_key, title, type FROM chat_list where post_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -64,9 +60,8 @@ function plus_personnel(parameter) {
         console.log("db start p")
         const queryData = `UPDATE chat_list SET personnel = personnel + 1 where room_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
-            if(db_data) resolve(db_data);
-            else reject(err);
+            if(err) reject(err);
+            else resolve(db_data);
         })
     });
 }
@@ -77,9 +72,8 @@ function minus_personnel(parameter) {
         console.log("db start p")
         const queryData = `UPDATE chat_list SET personnel = personnel - 1 where room_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
-            if(db_data) resolve(db_data);
-            else reject(err);
+            if(err) reject(err);
+            else resolve(db_data);
         })
     });
 }
@@ -90,13 +84,8 @@ function chat_list_accompanyC(parameter) {
         console.log("db start p")
         const queryData = `INSERT INTO chat_list(room_key, user_key, post_key, title, type) values (?, ?, ?, ?, 1)`;
         db.query(queryData, [parameter.room_key, parameter.user_key, parameter.post_key, parameter.title], (err, db_data) => {
-            console.log(db_data);
-            if(db_data){
-                resolve(db_data);
-            }
-            else {
-                reject(err);
-            }
+            if(err) reject(err);
+            else resolve(db_data);
         })
     });
 }
@@ -107,13 +96,8 @@ function chat_listC_host(parameter) {
         console.log("db start p")
         const queryData = `INSERT INTO chat_list(user_key, post_key, title, type, personnel) values (?, ?, ?, 1, 0)`;
         db.query(queryData, [parameter.user_key, parameter.post_key, parameter.title], (err, db_data) => {
-            console.log(db_data);
-            if(db_data){
-                resolve(db_data);
-            }
-            else {
-                reject(err);
-            }
+            if(err) reject(err);
+            else resolve(db_data);
         })
     });
 }
@@ -123,7 +107,6 @@ function chat_list_info(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT room_key, user_key, post_key, title, type FROM chat_list where post_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -136,9 +119,8 @@ function chat_companion(parameter) {
         console.log("db start p")
         const queryData = `INSERT INTO chating(user_key, room_key, msg) values (?, ?, ?)`;
         db.query(queryData, [parameter.user_key, parameter.room_key, parameter.msg], (err, db_data) => {
-            console.log(db_data);
-            if(db_data) resolve(db_data);
-            else reject(err);
+            if(err) reject(err);
+            else resolve(db_data);
         })
     });
 }
@@ -148,7 +130,6 @@ function chat_companion_R(parameter) {
         console.log("db start p")
         const queryData = `SELECT * FROM chating where chat_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -161,9 +142,8 @@ function chatRoom_companion(parameter) {
         console.log("db start p")
         const queryData = `INSERT INTO chat_list(room_key, user_key, post_key, title, type) values (?, ?, ?, ?, 1)`;
         db.query(queryData, [parameter.room_key, parameter.user_key, parameter.post_key, parameter.title], (err, db_data) => {
-            console.log(db_data);
-            if(db_data) resolve(db_data);
-            else reject(err);
+            if(err) reject(err);
+            else resolve(db_data);
         })
     });
 }
@@ -174,13 +154,8 @@ function chat_list_friendC(parameter) {
         console.log("db start p")
         const queryData = `INSERT INTO chat_list(user_key, title, type) values (?, ?, 2)`;
         db.query(queryData, [parameter.user_key, parameter.load_name], (err, db_data) => {
-            console.log(db_data);
-            if(db_data){
-                resolve(db_data);
-            }
-            else {
-                reject(err);
-            }
+            if(err) reject(err);
+            else resolve(db_data);
         })
     });
 }
@@ -191,7 +166,6 @@ function listC_load_name(parameter) {
         console.log("db start p")
         const queryData = `SELECT nickname FROM user where user_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
             if(db_data){
                 resolve(db_data);
             }
@@ -208,9 +182,8 @@ function chatRoom_friend(parameter) {
         console.log("db start p")
         const queryData = `INSERT INTO chat_list(user_key, post_key, title, type) values (?, ?, ?, 2)`;
         db.query(queryData, [parameter.user_key, parameter.post_key, parameter.title], (err, db_data) => {
-            console.log(db_data);
-            if(db_data) resolve(db_data);
-            else reject(err);
+            if(err) reject(err);
+            else resolve(db_data);
         })
     });
 }
@@ -221,7 +194,6 @@ function read_content(paramter) {
         console.log("db start p");
         const queryData = `SELECT chating.user_key, msg, date, type FROM chating LEFT OUTER JOIN chat_list ON chating.room_key = chat_list.room_key where chating.user_key = ?`;
         db.query(queryData, [paramter], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -234,7 +206,6 @@ function read_user(parameter) {
         console.log('db start p');
         const queryData = `SELECT user_key FROM chat_list where room_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -245,7 +216,6 @@ function modify_user_name(parameter) {
     return new Promise((resolve, rejcet) => {
         const queryData = `SELECT nickname FROM user where user_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -257,9 +227,8 @@ function chat_exit(parameter) {
         console.log('db start p');
         const queryData = `DELETE FROM chat_list where room_key = ? AND user_key = ?`;
         db.query(queryData, [parameter.room_key, parameter.user_key], (err, db_data) => {
-            console.log(db_data);
-            if(db_data) resolve(db_data);
-            else reject(err);
+            if(err) reject(err);
+            else resolve(db_data);
         })
     })
 }

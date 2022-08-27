@@ -7,12 +7,8 @@ function chating_save(parameter) {
         console.log("db start P");
         const queryData = `INSERT INTO alarm (user_key, sent_key, msg, time, type) values (?, ?, ?, ?, ?)`;
         db.query(queryData, [parameter.user_key, parameter.sent_user, parameter.msg, parameter.time, parameter.type], (err, db_data) => {
-            if(db_data) {
-                resolve(db_data);
-            }
-            else {
-                reject(err);
-            }
+            if(err) reject(err);
+            else resolve(db_data);
         })
     });
 }
@@ -21,9 +17,8 @@ function friend_req_save(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `INSERT INTO alarm (user_key, msg, type, data_key) values (?, ?, 1, ?)`;
         db.query(queryData, [parameter.req_person, parameter.data, parameter.res_person], (err, db_data) => {
-            console.log(db_data);
-            if(db_data) resolve(db_data);
-            else reject(err);
+            if(err) reject(err);
+            else resolve(db_data);
         })
     })
 }
@@ -32,9 +27,8 @@ function friend_res_save(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `INSERT INTO alarm (user_key, msg, type, data_key) values (?, ?, 2, ?)`;
         db.query(queryData, [parameter.user_key, parameter.data, parameter.del_friend], (err, db_data) => {
-            console.log(db_data);
-            if(db_data) resolve(db_data);
-            else reject(err);
+            if(err) reject(err);
+            else resolve(db_data);
         })
     })
 }
@@ -46,7 +40,6 @@ function alarm_main_page(parameter) {
                            LEFT OUTER JOIN user ON alarm.user_key = user.user_key 
                            where alarm.user_key = ? ORDER BY time DESC`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data)
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -59,7 +52,6 @@ function friend_req_alarm(parameter) {
                            LEFT OUTER JOIN user ON friend_list.friend_1 = user.user_key 
                            where friend_1 = ? AND accept = 0`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -72,7 +64,6 @@ function friend_res_alarm(parameter) {
                            LEFT OUTER JOIN user ON friend_list.friend_1 = user.user_key
                            where friend_1 = ? AND accept = 1`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -93,7 +84,6 @@ function alarm_content(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT msg FROM alarm where alarm_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -104,7 +94,6 @@ function alarm_msg(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT msg, time FROM alarm where user_key = ? AND alarm_key = 0`;
         db.query(queryData, [parameter.user_key], (err, db_data) => {
-            console.log(db_data);
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -115,9 +104,8 @@ function deco_save(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `INSERT INTO alarm (user_key, msg, type) values (?, ?, 4)`;
         db.query(queryData, [parameter.user_key, parameter.msg], (err, db_data) => {
-            console.log(db_data);
-            if(db_data) resolve(db_data);
-            else reject(err);
+            if(err) reject(err);
+            else resolve(db_data);
         })
     })
 }
@@ -126,8 +114,8 @@ function check_read(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `UPDATE alarm SET check_read = 1 where alarm_key = ? AND ORDER BY check_read ASC, time DESC`;
         db.query(queryData, [parameter], (err, db_data) => {
-            if(db_data) resolve(db_data);
-            else reject(err);
+            if(err) reject(err);
+            else resolve(db_data);
         })
     })
 }
