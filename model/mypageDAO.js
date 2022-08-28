@@ -73,6 +73,16 @@ function inform_deco_index(parameter) {
     })
 }
 
+function change_null(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `UPDATE decoration_list SET deco_index = NULL where user_key = ? AND deco_index = ?`;
+        db.query(queryData, [parameter.user_key, parameter.index], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
 module.exports = {
     first_login_getInfo,
     user_profile_modify,
@@ -80,5 +90,6 @@ module.exports = {
     show_me,
     read_deco_list_key,
     insert_deco_index,
-    inform_deco_index
+    inform_deco_index,
+    change_null
 }

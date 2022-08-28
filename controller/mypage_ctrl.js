@@ -64,9 +64,14 @@ async function deco_index(req, res, next) {
         const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const deco_key = req.body.deco_key;
         const index = req.body.index;
+        let parameter = {};
 
-        let parameter = { user_key, deco_key };
-        let db_data = await mypageDAO.read_deco_list_key(parameter);
+        parameter = { user_key, index }
+        let db_data = await mypageDAO.change_null(parameter);
+
+        parameter = { user_key, deco_key };
+        db_data = await mypageDAO.read_deco_list_key(parameter);
+
         const deco_list_key = db_data[0].deco_list_key;
 
         parameter = { deco_list_key, index };
