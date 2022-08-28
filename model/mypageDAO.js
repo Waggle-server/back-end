@@ -43,9 +43,42 @@ function show_me(parameter) {
     })
 }
 
+function read_deco_list_key(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT deco_list_key FROM decoration_list where user_key = ? AND deco_key = ?`;
+        db.query(queryData, [parameter.user_key, parameter.deco_key], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
+function insert_deco_index(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `UPDATE decoration_list SET deco_index = ? where deco_list_key = ?`;
+        db.query(queryData, [parameter.index, parameter.deco_list_key], (err, db_data) => {
+            if(err) reject;
+            else resolve(db_data);
+        })
+    })
+}
+
+function inform_deco_index(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT deco_key FROM decoration_list where user_key = ? AND deco_index = ?`;
+        db.query(queryData, [parameter.user_key, parameter.index], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
 module.exports = {
     first_login_getInfo,
     user_profile_modify,
     user_detail_profile_modify,
-    show_me
+    show_me,
+    read_deco_list_key,
+    insert_deco_index,
+    inform_deco_index
 }

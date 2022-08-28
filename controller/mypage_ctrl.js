@@ -59,8 +59,45 @@ async function show_me(req, res, next) {
     }
 }
 
+async function deco_index(req, res, next) {
+    try {
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
+        const deco_key = req.body.deco_key;
+        const index = req.body.index;
+
+        let parameter = { user_key, deco_key };
+        let db_data = await mypageDAO.read_deco_list_key(parameter);
+        const deco_list_key = db_data[0].deco_list_key;
+
+        parameter = { deco_list_key, index };
+        db_data = await mypageDAO.insert_deco_index(parameter);
+
+        res.send({ result: "success" });
+    } catch (err) {
+        res.send("훈장 위치 오류")
+    }
+}
+
+async function select_my_deco(req, res, next) {
+    try {
+        const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
+        const index = req.body.index;
+
+        const parameter = { user_key, index };
+        const db_data = await mypageDAO.inform_deco_index(parameter);
+
+        res.json({
+            "db_data": db_data
+        })
+    } catch(err) {
+        res.send("훈장 불러오기 오류");
+    }
+}
+
 module.exports = {
     first_login_userInfo,
     profile_modify,
-    show_me
+    show_me,
+    deco_index,
+    select_my_deco
 }
