@@ -8,4 +8,5 @@ const aiCtrl = require('../controller/aiCtrl');
 router.get('/userPick', aiCtrl.user_pick);
 
 
+
 module.exports = router;

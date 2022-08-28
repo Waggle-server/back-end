@@ -16,6 +16,7 @@ const noticeRouter = require("./routes/notice");
 const guestPlaceRouter = require("./routes/guestPlace");
 const guestBookRouter = require("./routes/guestBook");
 const traceRouter = require("./routes/trace");
+const ai_Router = require("./routes/ai");
 
 
 const mypageRouter = require("./routes/mypageRouter");
@@ -60,6 +61,7 @@ app.use('/notice', noticeRouter);
 app.use('/guestPlace', guestPlaceRouter);   //방명록 장소등록
 app.use('/guestBook', guestBookRouter);     //방명록
 app.use("/trace", traceRouter);
+app.use("/ai", ai_Router)
 
 
 
