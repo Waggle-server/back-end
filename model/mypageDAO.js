@@ -4,8 +4,8 @@ const {db} = require("../config/dbconn");
 
 function first_login_getInfo(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `INSERT INTO user_detail(user_key, nickname, sex, tag, mbti, intro) values (?, ?, ?, ?, ?, ?)`;
-        db.query(queryData, [parameter.user_key, parameter.nickname, parameter.sex, parameter.tags, parameter.intro], (err, db_data) => {
+        const queryData = `INSERT INTO user_detail(user_key, sex, tag, mbti, intro) values (?, ?, ?, ?, ?)`;
+        db.query(queryData, [parameter.user_key, parameter.sex, parameter.tags, parameter.intro], (err, db_data) => {
             if (err) reject(err);
             else resolve(db_data);
         })
@@ -24,8 +24,8 @@ function user_profile_modify(parameter) {
 
 function user_detail_profile_modify(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `UPDATE user_detail SET sex = ?, mbti = ?, tag = ?, intro = ? where user_key = ?`;
-        db.query(queryData, [parameter.sex, parameter.mbti, parameter.tags, parameter.intro, parameter.user_key], (err, db_data) => {
+        const queryData = `UPDATE user_detail SET mbti = ?, tag = ?, intro = ? where user_key = ?`;
+        db.query(queryData, [parameter.mbti, parameter.tags, parameter.intro, parameter.user_key], (err, db_data) => {
             if (err) reject(err);
             else resolve(db_data);
         })

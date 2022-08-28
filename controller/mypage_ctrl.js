@@ -5,7 +5,6 @@ const mypageDAO = require("../model/mypageDAO");
 async function first_login_userInfo(req, res, next) {
     try {
         const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
-        const nickname = req.body.nickname;
         let sex = req.body.sex;
         const tags = req.body.tags;
         const mbti = req.body.mbti;
@@ -14,12 +13,12 @@ async function first_login_userInfo(req, res, next) {
         if (sex == "여") sex = 1
         else if (sex == "남") sex = 2
 
-        const parameter = { user_key, nickname, sex, tags, mbti, intro };
+        const parameter = { user_key, sex, tags, mbti, intro };
         const db_data = await mypageDAO.first_login_getInfo(parameter);
 
         res.send({ result: "success" });
     } catch (err) {
-        res.send("사용자 정보를 가져올 수 없음")
+        res.send({ result: "사용자 정보를 가져올 수 없음"})
     }
 }
 
@@ -27,17 +26,13 @@ async function profile_modify(req, res, next) {
     try {
         const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const nickname = req.body.nickname;
-        let sex = req.body.sex;
         const mbti = req.body.mbti;
         const intro = req.body.intro;
         const tags = req.body.tags;
-
-        if (sex == "여") sex = 1
-        else if (sex == "남") sex = 2
         
         const user_parameter = { user_key, nickname };
         let db_data = await mypageDAO.user_profile_modify(user_parameter);
-        const detail_parameter = { user_key, sex, mbti, tags, intro };
+        const detail_parameter = { user_key, mbti, tags, intro };
         db_data = await mypageDAO.user_detail_profile_modify(detail_parameter);
 
         res.send({ result: "success" });
@@ -86,10 +81,8 @@ async function deco_index(req, res, next) {
 async function select_my_deco(req, res, next) {
     try {
         const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
-        const index = req.body.index;
 
-        const parameter = { user_key, index };
-        const db_data = await mypageDAO.inform_deco_index(parameter);
+        const db_data = await mypageDAO.inform_deco_index(user_key);
 
         res.json({
             "db_data": db_data
