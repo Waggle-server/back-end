@@ -18,7 +18,7 @@ async function first_login_userInfo(req, res, next) {
 
         res.send({ result: "success" });
     } catch (err) {
-        res.send({ result: "사용자 정보를 가져올 수 없음"})
+        res.send({ result: err})
     }
 }
 
