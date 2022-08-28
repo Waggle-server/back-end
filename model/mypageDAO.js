@@ -65,8 +65,8 @@ function insert_deco_index(parameter) {
 
 function inform_deco_index(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `SELECT deco_key FROM decoration_list where user_key = ? AND deco_index = ?`;
-        db.query(queryData, [parameter.user_key, parameter.index], (err, db_data) => {
+        const queryData = `SELECT deco_key, deco_index FROM decoration_list where user_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);
         })
