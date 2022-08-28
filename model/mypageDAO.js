@@ -34,7 +34,7 @@ function user_detail_profile_modify(parameter) {
 
 function show_me(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `SELECT nickname, img, mbti, intro, tag, deco FROM user LEFT OUTER JOIN user_detail ON user_detail.user_key = user.user_key where user.user_key = ?`;
+        const queryData = `SELECT nickname, img, mbti, intro, tag FROM user LEFT OUTER JOIN user_detail ON user_detail.user_key = user.user_key where user.user_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
             console.log(db_data)
             if(db_data) resolve(db_data);
