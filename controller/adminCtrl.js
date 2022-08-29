@@ -7,6 +7,14 @@ const {imgRename} = require('../middleware/multer');
 const { paging } = require('./tool/paging');
 
 
+
+const privacy = async (req, res) => {
+    res.render(`../views/admin/privacy.ejs`);
+}
+
+
+
+
 // 로그인
 const login = async (req, res) => {
     if(req.session.admin_key){
@@ -469,6 +477,11 @@ const manage_notice_notice_delete = async (req, res) => {
 
 
 module.exports = {
+    privacy,
+
+
+
+    
     login,
     login_process,
     logout_process,

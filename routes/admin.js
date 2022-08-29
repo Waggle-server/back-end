@@ -6,6 +6,9 @@ const adminCtrl = require('../controller/adminCtrl');
 const multer  = require("../middleware/multer");
 
 
+router.get("/privacy", adminCtrl.privacy)
+
+
 // login
 router.get('/login', adminCtrl.login);
 router.post('/login/process', adminCtrl.login_process);
