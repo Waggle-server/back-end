@@ -9,11 +9,12 @@ async function first_login_userInfo(req, res, next) {
         const tags = req.body.tags;
         const mbti = req.body.mbti;
         const intro = req.body.intro;
+        const token = req.body.token;
 
         if (sex == "여") sex = 1
         else if (sex == "남") sex = 2
 
-        const parameter = { user_key, sex, tags, mbti, intro };
+        const parameter = { user_key, sex, tags, mbti, intro, token};
         const db_data = await mypageDAO.first_login_getInfo(parameter);
 
         res.send({ result: "success" });
@@ -29,10 +30,12 @@ async function profile_modify(req, res, next) {
         const mbti = req.body.mbti;
         const intro = req.body.intro;
         const tags = req.body.tags;
-        const token = req.body.token;
+        
         
         const user_parameter = { user_key, nickname };
         let db_data = await mypageDAO.user_profile_modify(user_parameter);
+
+
         const detail_parameter = { user_key, mbti, tags, intro, token };
         db_data = await mypageDAO.user_detail_profile_modify(detail_parameter);
 
