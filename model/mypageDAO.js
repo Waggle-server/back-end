@@ -24,8 +24,8 @@ function user_profile_modify(parameter) {
 
 function user_detail_profile_modify(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `UPDATE user_detail SET mbti = ?, tag = ?, intro = ? where user_key = ?`;
-        db.query(queryData, [parameter.mbti, parameter.tags, parameter.intro, parameter.user_key], (err, db_data) => {
+        const queryData = `UPDATE user_detail SET mbti = ?, tag = ?, intro = ?, token = ? where user_key = ?`;
+        db.query(queryData, [parameter.mbti, parameter.tags, parameter.intro, parameter.token, parameter.user_key], (err, db_data) => {
             if (err) reject(err);
             else resolve(db_data);
         })

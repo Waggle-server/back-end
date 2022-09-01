@@ -29,10 +29,11 @@ async function profile_modify(req, res, next) {
         const mbti = req.body.mbti;
         const intro = req.body.intro;
         const tags = req.body.tags;
+        const token = req.body.token;
         
         const user_parameter = { user_key, nickname };
         let db_data = await mypageDAO.user_profile_modify(user_parameter);
-        const detail_parameter = { user_key, mbti, tags, intro };
+        const detail_parameter = { user_key, mbti, tags, intro, token };
         db_data = await mypageDAO.user_detail_profile_modify(detail_parameter);
 
         res.send({ result: "success" });
