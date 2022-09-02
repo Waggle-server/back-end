@@ -21,9 +21,6 @@ router.get('/companionPostR_A_real_time', accompany_ctrl.companionPost_read_A_re
 //동행 게시글 전체 보기(마감 글)o
 router.get('/companionPostR_A_closing', accompany_ctrl.companionPost_read_A_closing);
 
-
-//호스트가 게시글을 올리자마자 채팅방 입장
-router.get('/host_accompany_chat/:post_key', accompany_ctrl.host_accompany_chat);
 //동행자 디테일o
 router.get('/companion_detail/:companion_key', accompany_ctrl.profile_detail);
 //동행 게시글 검색_아이디o

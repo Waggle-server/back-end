@@ -3,6 +3,7 @@
 const friendDAO = require("../model/friendDAO");
 const chatDAO = require("../model/chatDAO");
 const alarmDAO = require("../model/alarmDAO");
+const { admin } = require("../middleware/pushFcm");
 
 //친구 요청 post
 async function req_friend(req, res, next) {
@@ -32,7 +33,25 @@ async function req_friend(req, res, next) {
         let sent_data = await alarmDAO.get_data_key(alarm_key);
         sent_data = sent_data[0];
 
-        res.send({ data, sent_data, alarm_key });
+        let message = {
+            notification: {
+              title: "와글 친구 요청",
+              body: data,
+            },
+            token: target_token,
+        }
+
+        admin
+        .messaging()
+        .send(message)
+        .then(function (response) {
+            console.log('Successfully sent message: ', response)
+            return res.json({ data, sent_data, alarm_key })
+        })
+        .catch(function (err) {
+            console.log('Error Sending message: ', err)
+            return res.json({ result : "false" })
+        });
     } catch (err) {
         res.send("사용자를 찾을 수 없습니다.");
     }
@@ -69,7 +88,25 @@ async function res_friend(req, res, next) {
             let sent_data = await alarmDAO.get_data_key(alarm_key);
             sent_data = sent_data[0];
 
-            res.send({ data, sent_data, alarm_key });
+            let message = {
+                notification: {
+                  title: "와글 친구 수락",
+                  body: data,
+                },
+                token: target_token,
+            }
+    
+            admin
+            .messaging()
+            .send(message)
+            .then(function (response) {
+                console.log('Successfully sent message: ', response)
+                return res.json({ data, sent_data, alarm_key })
+            })
+            .catch(function (err) {
+                console.log('Error Sending message: ', err)
+                return res.json({ result : "false" })
+            });
         }
 
         if (answer == "거절") {
@@ -126,7 +163,7 @@ async function chat_friend(req, res, next) {
         const db_data_C = await chatDAO.chat_list_friendC(parameter);
         let db_data = await chatDAO.chat_listR_socket(user_key);
         db_data = db_data[0];
-        res.render('socket_test', { db_data, user_key });
+        res.send({ db_data, user_key });
     } catch (err) {
         res.send("통신 오류");
     }
