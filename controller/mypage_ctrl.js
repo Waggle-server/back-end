@@ -47,11 +47,9 @@ async function show_me(req, res, next) {
         const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const db_data = await mypageDAO.show_me(user_key);
 
-        res.json({
-            "db_data": db_data
-        })
+        res.send( {result : db_data} )
     } catch(err) {
-        res.send("마이페이지 오류");
+        res.send(err);
     }
 }
 
