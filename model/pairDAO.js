@@ -46,6 +46,16 @@ function insert_pair_hostV(parameter) {
     });
 }
 
+function check_other_pair(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT count(post_key) as cnt FROM pair_list where user_key = ? AND connect = 1`;
+        db.query(queryData, [parameter], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
 function qr_check_id(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
@@ -305,6 +315,7 @@ module.exports = {
     load_user_id,
     insert_pair,
     insert_pair_hostV,
+    check_other_pair,
     qr_check_id,
     user_check,
     get_user_key,

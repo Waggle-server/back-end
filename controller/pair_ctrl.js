@@ -306,7 +306,7 @@ async function disconnect_pair(req, res, next) {
             const type_zero = await pairDAO.type_zero(user_key);
         }    
 
-        res.send({ result: "success" });
+        res.send({ result: 1 });
     } catch (err) {
         res.send('연결 끊기 오류');
     }

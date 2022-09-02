@@ -221,7 +221,7 @@ function companion_postR_A_closing(parameter) {
 
 function companion_detail(parameter) {
     return new Promise((resolve, reject) => {
-        const qeuryData = 'SELECT nickname, img, mbti, intro, tag, temperature, deco FROM user LEFT OUTER JOIN user_detail ON user_detail.user_key = user.user_key where user.user_key = ?';
+        const qeuryData = 'SELECT nickname, img, mbti, intro, tag, temperature FROM user LEFT OUTER JOIN user_detail ON user_detail.user_key = user.user_key where user.user_key = ?';
         db.query(qeuryData, [parameter], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);
@@ -297,6 +297,16 @@ function count_post(parameter) {
     })
 }
 
+function user_get_token(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT token FROM user_detail where user_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
 module.exports = {  
     read_user_key,
     user_suggest,
@@ -321,5 +331,6 @@ module.exports = {
     check_deadline,
     check_personnel,
     check_close_personnel,
-    count_post
+    count_post,
+    user_get_token
 }

@@ -5,6 +5,8 @@ const chatDAO = require("../model/chatDAO");
 const pairDAO = require("../model/pairDAO");
 const alarmDAO = require("../model/alarmDAO");
 const decoDAO = require("../model/decoDAO");
+const pushFCM = require("../pushFcm");
+const admin = require("firebase-admin");
 
 const paging = (currentPage, pageSize) => {
     const default_start_page = 0;
@@ -76,9 +78,6 @@ async function companionPost_create(req, res, next) {
         const db_data = await accompanyDAO.companion_postC(parameter);
         const post_key = db_data.insertId;
 
-        const accompany_data = await accompanyDAO.accompany_info(post_key);
-        const insert_accompany_data = await chatDAO.chat_listC_host(accompany_data[0]);
-
         if(tags) {
             const tag = tags.split(', ');
             const tag_lenght = tag.length;
@@ -94,8 +93,11 @@ async function companionPost_create(req, res, next) {
         let send_deco;
         let deco_data = "";
         let alarm_data = "";
+        
+        let get_token = await accompanyDAO.user_get_token(user_key);
+        let target_token = get_token[0].token;
 
-        if(count_post[0].cnt == 1) { 
+        if(count_post[0].cnt == 1) {
             send_deco = await decoDAO.send_deco(8); 
             deco_data = send_deco[0];
 
@@ -113,6 +115,26 @@ async function companionPost_create(req, res, next) {
             const alarm_key = insert_alarm_data.insertId;
 
             res.send({ result: post_key, deco_data, alarm_data, alarm_key });
+
+            let message = {
+                notification: {
+                  title: alarm_data,
+                  body: deco_data.content,
+                },
+                token: target_token,
+            }
+            admin
+            .messaging()
+            .send(message)
+            .then(function (response) {
+                console.log('Successfully sent message: : ', response)
+                return res.status(200).json({ result: post_key, deco_data, alarm_data, alarm_key })
+                // return res.status(200).json({success : true})
+            })
+            .catch(function (err) {
+                console.log('Error Sending message!!! : ', err)
+                return res.status(400).json({success : false})
+            });
         }
 
         else if(count_post[0].cnt == 5) { 
@@ -133,6 +155,25 @@ async function companionPost_create(req, res, next) {
             const alarm_key = insert_alarm_data.insertId;
 
             res.send({ result: post_key, deco_data, alarm_data, alarm_key });
+
+            // let message = {
+            //     notification: {
+            //       title: alarm_data,
+            //       body: deco_data.content,
+            //     },
+            //     token: target_token,
+            // }
+            // admin
+            // .messaging()
+            // .send(message)
+            // .then(function (response) {
+            //     console.log('Successfully sent message: : ', response)
+            //     return res.status(200).json({success : true})
+            // })
+            // .catch(function (err) {
+            //     console.log('Error Sending message!!! : ', err)
+            //     return res.status(400).json({success : false})
+            // });
         }
 
         else if(count_post[0].cnt == 10) { 
@@ -153,11 +194,31 @@ async function companionPost_create(req, res, next) {
             const alarm_key = insert_alarm_data.insertId;
 
             res.send({ result: post_key, deco_data, alarm_data, alarm_key });
+
+            // let message = {
+            //     notification: {
+            //       title: alarm_data,
+            //       body: deco_data.content,
+            //     },
+            //     token: target_token,
+            // }
+            // admin
+            // .messaging()
+            // .send(message)
+            // .then(function (response) {
+            //     console.log('Successfully sent message: : ', response)
+            //     return res.status(200).json({success : true})
+            // })
+            // .catch(function (err) {
+            //     console.log('Error Sending message!!! : ', err)
+            //     return res.status(400).json({success : false})
+            // });
         }
         else {
             res.send({ result: post_key });
         }
     } catch (err) {
+        console.log(err)
         res.send("게시글 업로드 오류");
     }
 }
@@ -293,10 +354,12 @@ async function profile_detail(req, res, next) {
     try {
         const companion_key = req.params.companion_key;
         const db_data = await accompanyDAO.companion_detail(companion_key);
+        
         res.json({
             "db_data": db_data
         });
     } catch (err) {
+        console.log(err)
         res.send("프로필을 읽어올 수 없습니다.");
     }
 }
@@ -461,7 +524,14 @@ async function companionPost_createChat(req, res, next) {
         let db_data = await chatDAO.chat_list_key(post_key);
         db_data = db_data[0];
 
-        res.send({ db_data, user_key });
+        const check_pair = await pairDAO.check_other_pair(user_key);
+
+        if(check_pair[0].cnt == 0) {
+            res.render("socket_test", { db_data, user_key });
+        }
+        else {
+            res.send({ result: "이미 짝궁이 되어있습니다." });
+        }
     } catch (err) {
         res.send("통신 오류");
     }

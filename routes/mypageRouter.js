@@ -10,6 +10,8 @@ router.post("/first_login_userInfo", mypage_ctrl.first_login_userInfo);
 router.post("/profile_modify", mypage_ctrl.profile_modify);
 //마이페이지
 router.get("/show_me", mypage_ctrl.show_me);
+
+
 //마이페이지에서 훈장 골랐을 때 위치 저장
 router.post("/deco_index", mypage_ctrl.deco_index)
 //마이페이지에서 고른 훈장 계속 보여줄 때
