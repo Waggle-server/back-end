@@ -5,7 +5,7 @@ const {db} = require("../config/dbconn");
 function first_login_getInfo(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `INSERT INTO user_detail(user_key, sex, tag, mbti, intro, token) values (?, ?, ?, ?, ?, ?)`;
-        db.query(queryData, [parameter.user_key, parameter.sex, parameter.tags, parameter.intro, parameter.mbti, parameter.token], (err, db_data) => {
+        db.query(queryData, [parameter.user_key, parameter.sex, parameter.tags, parameter.mbti, parameter.intro, parameter.token], (err, db_data) => {
             if (err) reject(err);
             else resolve(db_data);
         })
