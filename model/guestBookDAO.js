@@ -9,7 +9,7 @@ const gbSearch = (parameters) =>{
             (SELECT SUM(heart) FROM guestBook_heart WHERE gb_key = guestBook.gb_key) AS heart
             FROM guestBook
             LEFT JOIN guestPlace ON guestPlace.gp_key=guestBook.gp_key
-            WHERE (place LIKE ? OR comment LIKE ?) AND (guestBook.img IS NOT NULL)
+            WHERE (place LIKE ? OR comment LIKE ?) AND (accept = true)
             ORDER BY date_update DESC LIMIT ?, ?;`,[`%${parameters.search}%`, `%${parameters.search}%`, parameters.offset, parameters.limit], (err, db_data) => {
             if(err) {
                 reject(err);
@@ -50,7 +50,7 @@ const gbList = (parameters) =>{
             (SELECT SUM(heart) FROM guestBook_heart WHERE gb_key = guestBook.gb_key) AS heart 
             FROM guestBook
             LEFT JOIN user ON user.user_key=guestBook.user_key
-            WHERE guestBook.gp_key=?
+            WHERE (guestBook.gp_key=? AND accept=true)
             ORDER BY date_update DESC LIMIT ?, ?;`,[parameters.gp_key, parameters.offset, parameters.limit], (err, db_data) => {
             if(err) {
                 reject(err);
