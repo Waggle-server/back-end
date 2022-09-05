@@ -8,7 +8,8 @@ function chat_listR(parameter) {
         const queryData = `SELECT room_key, chat_list.title, nickname, img FROM chat_list 
                            LEFT OUTER JOIN user on chat_list.user_key = user.user_key 
                            LEFT OUTER JOIN accompany on chat_list.post_key = accompany.post_key
-                           where chat_list.user_key = ?`;
+                           where chat_list.user_key = ?
+                           ORDER BY DESC`;
         db.query(queryData, [parameter], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);
@@ -20,7 +21,7 @@ function chat_listR(parameter) {
 function chat_read_each(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
-        const queryData = `SELECT nickname, msg, date FROM chating 
+        const queryData = `SELECT user_key, room_key, nickname, msg, date FROM chating 
         LEFT OUTER JOIN user on chating.user_key = user.user_key
         where room_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
@@ -233,6 +234,17 @@ function chat_exit(parameter) {
     })
 }
 
+function chat_list_room_key(parameter) {
+    return new Promise((resolve, reject) => {
+        console.log("db start p")
+        const queryData = `SELECT DISTINCT room_key, post_key, title, type FROM chat_list where room_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    });
+}
+
 module.exports = {  
     chat_listR,
     chat_read_each,
@@ -252,5 +264,6 @@ module.exports = {
     read_content,
     read_user,
     modify_user_name,
-    chat_exit
+    chat_exit,
+    chat_list_room_key
 }

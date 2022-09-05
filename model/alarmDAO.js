@@ -36,9 +36,9 @@ function friend_res_save(parameter) {
 function alarm_main_page(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
-        const queryData = `SELECT alarm.user_key, img, msg, time, type, data_key FROM alarm 
+        const queryData = `SELECT alarm_key, alarm.user_key, img, msg, time, type, data_key FROM alarm 
                            LEFT OUTER JOIN user ON alarm.user_key = user.user_key 
-                           where alarm.user_key = ? ORDER BY time DESC`;
+                           where alarm.user_key = ? AND ORDER BY check_read ASC, time DESC`;
         db.query(queryData, [parameter], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);
@@ -112,10 +112,20 @@ function deco_save(parameter) {
 
 function check_read(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `UPDATE alarm SET check_read = 1 where alarm_key = ? AND ORDER BY check_read ASC, time DESC`;
+        const queryData = `UPDATE alarm SET check_read = 1 where alarm_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
             if(err) reject(err);
             else resolve(db_data);
+        })
+    })
+}
+
+function post_move(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT type, data_key FROM alarm where alarm_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
         })
     })
 }
@@ -131,5 +141,6 @@ module.exports = {
     alarm_content,
     alarm_msg,
     deco_save,
-    check_read
+    check_read,
+    post_move
 }

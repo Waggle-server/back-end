@@ -20,8 +20,11 @@ async function check_alarm(req, res, next) {
         const alarm_key = req.params.alarm_key;
 
         const db_data = await alarmDAO.check_read(alarm_key);
+        const result = await alarmDAO.post_move(alarm_key);
 
-        res.send({ result: "success" });
+        res.json({
+            "result": result
+        })
     } catch (err) {
         res.send("알림 확인 오류");
     }

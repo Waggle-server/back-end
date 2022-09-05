@@ -340,7 +340,7 @@ async function profile_detail(req, res, next) {
         const db_data = await accompanyDAO.companion_detail(companion_key);
         
         res.json({
-            "db_data": db_data
+            "result": db_data
         });
     } catch (err) {
         console.log(err)
@@ -401,7 +401,9 @@ async function companionPost_Deadline_Btn(req, res, next) {
         const mate_length = mate_key.length;
 
         let parameter = { post_key, host };
-         //host는 connect 기본 1로 insert 해둔다
+        const deadline = await accompanyDAO.check_deadline(parameter);
+
+        //host는 connect 기본 1로 insert 해둔다
         const host_data = await pairDAO.insert_pair_hostV(parameter);
 
         for(let i=0; i<mate_length; i++) {
@@ -415,9 +417,6 @@ async function companionPost_Deadline_Btn(req, res, next) {
             }
         }
 
-        parameter = { post_key, host };
-        const deadline = await accompanyDAO.check_deadline(parameter);
-
         const mate_user = await pairDAO.get_mate_user(post_key);
 
         let send_deco = []; let deco_data = [];
@@ -426,11 +425,11 @@ async function companionPost_Deadline_Btn(req, res, next) {
         
         for(let i=0; i<mate_user.length; i++) {
             let count_user = await pairDAO.count_user(mate_user[i].user_key);
-            let user_key = mate_user[i].user_key;
-            user_keys.push(user_key);
+            let user_key = mate_user[i].user_key;;
 
             if(count_user[0].cnt == 1) {
-                let str = await decoDAO.send_deco(11);
+                user_keys.push(user_key)
+                let str = await decoDAO.send_deco(10);
                 send_deco.push(str);
                 str = str[0].content;
                 deco_data.push(str);
@@ -444,13 +443,36 @@ async function companionPost_Deadline_Btn(req, res, next) {
                 let parameter = { user_key, msg };
                 const insert_alarm_data = await alarmDAO.deco_save(parameter);
             
-                parameter = { user_key, deco_key: 11 };
+                parameter = { user_key, deco_key: 10 };
                 const db_deco = await decoDAO.insert_deco(parameter);
 
                 alarm_key = insert_alarm_data.insertId;
             }
 
             else if(count_user[0].cnt == 5) {
+                user_keys.push(user_key)
+                let str = await decoDAO.send_deco(11);
+                send_deco.push(str);
+                str = str[0].content;
+                deco_data.push(str);
+
+                str = await alarmDAO.alarm_content(4);
+                str = str[0].msg;
+                alarm_data.push(str);
+
+                const msg = deco_data[i] + " " + alarm_data[i];
+
+                const parameter = { user_key, msg };
+                const insert_alarm_data = await alarmDAO.deco_save(parameter);
+            
+                parameter = { user_key, deco_key: 11 };
+                const db_deco = await decoDAO.insert_deco(parameter);
+
+                alarm_key = insert_alarm_data.insertId;
+            }
+
+            else if(count_user[0].cnt == 10) {
+                user_keys.push(user_key)
                 let str = await decoDAO.send_deco(12);
                 send_deco.push(str);
                 str = str[0].content;
@@ -466,27 +488,6 @@ async function companionPost_Deadline_Btn(req, res, next) {
                 const insert_alarm_data = await alarmDAO.deco_save(parameter);
             
                 parameter = { user_key, deco_key: 12 };
-                const db_deco = await decoDAO.insert_deco(parameter);
-
-                alarm_key = insert_alarm_data.insertId;
-            }
-
-            else if(count_user[0].cnt == 10) {
-                let str = await decoDAO.send_deco(13);
-                send_deco.push(str);
-                str = str[0].content;
-                deco_data.push(str);
-
-                str = await alarmDAO.alarm_content(4);
-                str = str[0].msg;
-                alarm_data.push(str);
-
-                const msg = deco_data[i] + " " + alarm_data[i];
-
-                const parameter = { user_key, msg };
-                const insert_alarm_data = await alarmDAO.deco_save(parameter);
-            
-                parameter = { user_key, deco_key: 13 };
                 const db_deco = await decoDAO.insert_deco(parameter);
 
                 alarm_key = insert_alarm_data.insertId;
@@ -511,7 +512,7 @@ async function companionPost_createChat(req, res, next) {
         const check_pair = await pairDAO.check_other_pair(user_key);
 
         if(check_pair[0].cnt == 0) {
-            res.render("socket_test", { db_data, user_key });
+            res.send(db_data, user_key);
         }
         else {
             res.send({ result: "이미 짝궁이 되어있습니다." });
