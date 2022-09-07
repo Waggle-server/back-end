@@ -188,7 +188,7 @@ function companion_postR_A_real_time(parameter) {
                         FROM accompany
                         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
                         where accept = true AND deadline = 0
-                        ORDER BY date_update DESC LIMIT ?, ?`;
+                        ORDER BY date_upload DESC LIMIT ?, ?`;
         db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);
@@ -213,7 +213,7 @@ function companion_postR_A_closing(parameter) {
                       when (accompany.personnel-count_personnel)=7 then 7
                       when (accompany.personnel-count_personnel)=8 then 8
                       when (accompany.personnel-count_personnel)=9 then 9
-                      ELSE 10 END, date_update ASC LIMIT ?, ?`;
+                      ELSE 10 END, date_upload ASC LIMIT ?, ?`;
         db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);

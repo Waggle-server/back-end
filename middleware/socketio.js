@@ -3,8 +3,6 @@
 const SocketIO = require('socket.io');
 const accompanyDAO = require('../model/accompanyDAO');
 const chatDAO = require('../model/chatDAO');
-const alarmDAO = require('../model/alarmDAO');
-const { response } = require('express');
 
 module.exports = (server) => {
     const io = SocketIO(server);
@@ -29,6 +27,7 @@ module.exports = (server) => {
                 }
                 const plus_personnel = await chatDAO.plus_personnel(parameters.room_key);
             }
+            
             if ( msg.type == 2 ) { 
                 const join_db_data = await chatDAO.chatRoom_friend(parameters);
             }
@@ -56,30 +55,6 @@ module.exports = (server) => {
             db_data =  db_data[0]
             console.log('msg:', msg);
 
-            //채팅 알림 추후 수정
-            // const read_content_data = await chatDAO.read_content(parameter.user_key);
-            // const sent_users = await chatDAO.read_user(parameter.room_key);
-            
-            // const sent_user = [];
-
-            // for(let i=0; i<sent_users.length; i++) {
-            //     sent_user.push(sent_users[i].user_key);
-            // }
-
-            // for(let i=0; i<read_content_data.length; i++) {
-            //     if (sent_user[i] != parameter.user_key) {
-            //         let parameter = {
-            //             user_key: read_content_data[i].user_key,
-            //             sent_user: sent_user[i],
-            //             msg: read_content_data[i].msg,
-            //             time: read_content_data[i].date,
-            //             type: read_content_data[i].type
-            //         }
-            //         console.log(parameter.sent_user)
-            //         let alarm_data = await alarmDAO.chating_save(parameter);
-            //     }
-            // }
-
             io.to(parameter.room_key).emit('noti_room_message', db_data);
         });
     
@@ -105,6 +80,35 @@ module.exports = (server) => {
                 room_key: msg.room_key,
                 user_key: msg.user_key
             }
+
+            /////////// host만 가능하게 서버가 코드를 짤 경우 ////////////
+
+            // //room_key로 post_key를 가져온다
+            // let get_post_key = await chatDAO.get_post_key(parameter.room_key);
+            // get_post_key = get_post_key[0].post_key;
+
+            // //가져온 post_key로 user_key를 가져온다
+            // let get_post_user_key = await chatDAO.get_post_user_key(get_post_key);
+            // get_post_user_key = get_post_user_key[0].user_key;
+
+            // const check_host = await chatDAO.check_host(parameter.user_key);
+
+            // if(check_host[0].user_key == get_post_user_key) {
+            //     const user_export = await chatDAO.chat_exit(parameter);
+            //     const minus_personnel = await chatDAO.minus_personnel(parameter.room_key);
+
+            //     let nickname = await chatDAO.modify_user_name(parameter.user_key);
+            //     nickname = nickname[0].nickname;
+            //     let asd = nickname +'님이 내보내졌습니다.';
+            //     io.to(parameter.room_key).emit('noti_export_room', asd);
+            // }
+            
+            // else {
+            //     console.log(err);
+            // }
+
+            /////////// host만 가능하게 서버가 코드를 짤 경우 ////////////
+
             const user_export = await chatDAO.chat_exit(parameter);
             const minus_personnel = await chatDAO.minus_personnel(parameter.room_key);
 

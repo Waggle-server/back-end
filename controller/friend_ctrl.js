@@ -64,7 +64,6 @@ async function res_friend(req, res, next) {
         const del_friend = req.body.del_friend;
         const answer = req.body.answer;
         let data;
-        let img;
 
         const parameter = { user_key, del_friend };
 
@@ -157,13 +156,20 @@ async function chat_friend(req, res, next) {
     try {
         const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const friend_key = req.params.friend_key;
+
+        //친구 이름 불러오기
         let load_name = await chatDAO.listC_load_name(friend_key);
         load_name = load_name[0].nickname;
+
+        //chat_list DB에 채팅방 데이터 추가 user_key, title, type
         const parameter = { user_key, load_name };
         const db_data_C = await chatDAO.chat_list_friendC(parameter);
+
+        //소켓 통신할 때 필요한 값 room_key, title, type
         let db_data = await chatDAO.chat_listR_socket(user_key);
         db_data = db_data[0];
-        res.send({ db_data, user_key });
+
+        res.send(db_data, user_key);
     } catch (err) {
         res.send("통신 오류");
     }

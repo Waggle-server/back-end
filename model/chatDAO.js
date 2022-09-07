@@ -21,7 +21,7 @@ function chat_listR(parameter) {
 function chat_read_each(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
-        const queryData = `SELECT user_key, room_key, nickname, msg, date FROM chating 
+        const queryData = `SELECT user_key, nickname, msg, date FROM chating 
         LEFT OUTER JOIN user on chating.user_key = user.user_key
         where room_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
@@ -35,7 +35,7 @@ function chat_read_each(parameter) {
 function chat_listR_socket(parameter) {
     return new Promise((resolve, reject) => {
         console.log("db start p")
-        const queryData = `SELECT room_key, post_key, title, type FROM chat_list where type = 2 AND user_key = ?`;
+        const queryData = `SELECT room_key, title, type FROM chat_list where type = 2 AND user_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);
@@ -245,6 +245,38 @@ function chat_list_room_key(parameter) {
     });
 }
 
+/////////// host만 가능하게 서버가 코드를 짤 경우 ////////////
+function get_post_key(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT post_key FROM chat_list where room_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
+function get_post_user_key(parameter) {
+    return new Promise((resolve, rejcet) => {
+        const queryData = `SELECT user_key FROM accompany where post_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
+function check_host(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT `;
+        db.query(queryData, [parameter], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+/////////// host만 가능하게 서버가 코드를 짤 경우 ////////////
+
 module.exports = {  
     chat_listR,
     chat_read_each,
@@ -265,5 +297,8 @@ module.exports = {
     read_user,
     modify_user_name,
     chat_exit,
-    chat_list_room_key
+    chat_list_room_key,
+    get_post_key,
+    get_post_user_key,
+    check_host
 }

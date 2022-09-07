@@ -20,9 +20,11 @@ async function chat_read(req, res, next) {
         const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const room_key = req.params.room_key;
 
+        //소켓에 필요한 값 전달 room_key, post_key, title, type
         let db_data = await chatDAO.chat_list_room_key(room_key);
         db_data = db_data[0];
 
+        //이전 소켓 데이터 값 전달 user_key, nickname, msg, date
         let pre_data = await chatDAO.chat_read_each(room_key);
         pre_data = pre_data[0];
 
