@@ -64,6 +64,7 @@ async function res_friend(req, res, next) {
         const del_friend = req.body.del_friend;
         const answer = req.body.answer;
         let data;
+        let img;
 
         const parameter = { user_key, del_friend };
 
@@ -169,7 +170,7 @@ async function chat_friend(req, res, next) {
         let db_data = await chatDAO.chat_listR_socket(user_key);
         db_data = db_data[0];
 
-        res.send(db_data, user_key);
+        res.send({ db_data, user_key });
     } catch (err) {
         res.send("통신 오류");
     }

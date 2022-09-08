@@ -33,3 +33,12 @@ router.post('/companionDeadline_Btn/:post_key', accompany_ctrl.companionPost_Dea
 router.get('/companionPostC_chat/:post_key', accompany_ctrl.companionPost_createChat);
 
 module.exports = router;
+
+
+
+
+
+
+
+
+

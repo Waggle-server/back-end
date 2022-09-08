@@ -101,7 +101,7 @@ async function companionPost_create(req, res, next) {
         const target_token = get_token[0].token;
 
         if(count_post[0].cnt == 1) {
-            send_deco = await decoDAO.send_deco(13); 
+            send_deco = await decoDAO.send_deco(8); 
             deco_data = send_deco[0];
 
             alarm_data = await alarmDAO.alarm_content(4);
@@ -112,7 +112,7 @@ async function companionPost_create(req, res, next) {
             let parameter = { user_key, msg, post_key };
             const insert_alarm_data = await alarmDAO.deco_save(parameter);
 
-            parameter = { user_key, deco_key: 13 };
+            parameter = { user_key, deco_key: 8 };
             const db_daco = await decoDAO.insert_deco(parameter);
 
             const alarm_key = insert_alarm_data.insertId;
@@ -139,7 +139,7 @@ async function companionPost_create(req, res, next) {
         }
 
         else if(count_post[0].cnt == 5) { 
-            send_deco = await decoDAO.send_deco(14); 
+            send_deco = await decoDAO.send_deco(9); 
             deco_data = send_deco[0];
 
             alarm_data = await alarmDAO.alarm_content(4);
@@ -150,10 +150,12 @@ async function companionPost_create(req, res, next) {
             let parameter = { user_key, msg, post_key };
             const insert_alarm_data = await alarmDAO.deco_save(parameter);
 
-            parameter = { user_key, deco_key: 14 };
+            parameter = { user_key, deco_key: 9 };
             const db_daco = await decoDAO.insert_deco(parameter);
 
             const alarm_key = insert_alarm_data.insertId;
+
+            res.send({ user_key, post_key, deco_data, alarm_data, alarm_key });
 
             let message = {
                 notification: {
@@ -177,7 +179,7 @@ async function companionPost_create(req, res, next) {
         }
 
         else if(count_post[0].cnt == 10) { 
-            send_deco = await decoDAO.send_deco(15);
+            send_deco = await decoDAO.send_deco(10);
             deco_data = send_deco[0];
 
             alarm_data = await alarmDAO.alarm_content(4);
@@ -188,7 +190,7 @@ async function companionPost_create(req, res, next) {
             let parameter = { user_key, msg, post_key };
             const insert_alarm_data = await alarmDAO.deco_save(parameter);
 
-            parameter = { user_key, deco_key: 15 };
+            parameter = { user_key, deco_key: 10 };
             const db_daco = await decoDAO.insert_deco(parameter);
 
             const alarm_key = insert_alarm_data.insertId;
@@ -513,7 +515,7 @@ async function companionPost_createChat(req, res, next) {
         const check_pair = await pairDAO.check_other_pair(user_key);
 
         if(check_pair[0].cnt == 0) {
-            res.send(db_data, user_key);
+            res.send({ db_data, user_key });
         }
         else {
             res.send({ result: "이미 짝궁이 되어있습니다." });
