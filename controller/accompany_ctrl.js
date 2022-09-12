@@ -130,11 +130,11 @@ async function companionPost_create(req, res, next) {
             .send(message)
             .then(function (response) {
                 console.log('Successfully sent message: ', response)
-                return res.json({ user_key, post_key, deco_data, alarm_data, alarm_key })
+                return res.json({ user_key, post_key })
             })
             .catch(function (err) {
                 console.log('Error Sending message: ', err)
-                return res.json({ result : "false" })
+                return res.json({ result : false })
             });
         }
 
@@ -168,11 +168,11 @@ async function companionPost_create(req, res, next) {
             .send(message)
             .then(function (response) {
                 console.log('Successfully sent message: ', response)
-                return res.json({ user_key, post_key, deco_data, alarm_data, alarm_key })
+                return res.json({ user_key, post_key })
             })
             .catch(function (err) {
                 console.log('Error Sending message: ', err)
-                return res.json({ result : "false" })
+                return res.json({ result : false })
             });
         }
 
@@ -206,11 +206,11 @@ async function companionPost_create(req, res, next) {
             .send(message)
             .then(function (response) {
                 console.log('Successfully sent message: ', response)
-                return res.json({ user_key, post_key, deco_data, alarm_data, alarm_key })
+                return res.json({ user_key, post_key })
             })
             .catch(function (err) {
                 console.log('Error Sending message: ', err)
-                return res.json({ result : "false" })
+                return res.json({ result : false })
             });
         }
         else {
