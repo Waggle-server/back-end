@@ -11,7 +11,7 @@ module.exports = (server) => {
     io.on('connection', (socket)=>{
         // 방참여 요청
         socket.on('req_join_room', async (msg) => {
-            msg = JSON(msg)
+            msg = JSON.parse(msg)
             console.log('msg: ', msg)
             const parameters = {
                 room_key: msg.room_key,
