@@ -1,5 +1,6 @@
 "use strict";
 
+const { json } = require('body-parser');
 const SocketIO = require('socket.io');
 const accompanyDAO = require('../model/accompanyDAO');
 const chatDAO = require('../model/chatDAO');
@@ -10,8 +11,8 @@ module.exports = (server) => {
     io.on('connection', (socket)=>{
         // 방참여 요청
         socket.on('req_join_room', async (msg) => {
-            
-            console.log('msg: ', typeof(msg))
+            msg = JSON(msg)
+            console.log('msg: ', msg)
             const parameters = {
                 room_key: msg.room_key,
                 user_key: msg.user_key,
