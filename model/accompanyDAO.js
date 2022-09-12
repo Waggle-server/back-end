@@ -145,6 +145,7 @@ function read_upload_post(parameter) {
         (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel != 0)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
         FROM accompany
         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
+        where accept = true AND deadline = 0
         ORDER BY date_update DESC LIMIT ?, ?`;
         db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
             console.log(db_data);
@@ -161,6 +162,7 @@ function read_closing_post(parameter) {
         (SELECT personnel FROM chat_list where (accompany.post_key = chat_list.post_key AND chat_list.personnel != 0)) AS count_personnel, date_format(date_update, '%Y-%m-%d %T') as date_update
         FROM accompany
         LEFT OUTER JOIN user ON accompany.user_key = user.user_key
+        where accept = true AND deadline = 0
         ORDER BY date_update ASC LIMIT ?, ?`;
         db.query(queryData, [parameter.offset, parameter.limit], (err, db_data) => {
             console.log(db_data);
@@ -207,7 +209,7 @@ function companion_postR_A_closing(parameter) {
         ORDER BY CASE when (accompany.personnel-count_personnel)=1 then 1 
                       when (accompany.personnel-count_personnel)=2 then 2 
                       when (accompany.personnel-count_personnel)=3 then 3 
-					  when (accompany.personnel-count_personnel)=4 then 4
+                 when (accompany.personnel-count_personnel)=4 then 4
                       when (accompany.personnel-count_personnel)=5 then 5
                       when (accompany.personnel-count_personnel)=6 then 6
                       when (accompany.personnel-count_personnel)=7 then 7
