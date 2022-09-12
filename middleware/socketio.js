@@ -19,6 +19,7 @@ module.exports = (server) => {
                 title: msg.title,
                 type: msg.type
             }
+            console.log('parmaeters: ', parameters)
 
             if ( msg.type == 1 ) { 
                 const check_host = await accompanyDAO.companion_postD_check_identity(parameters.post_key);
