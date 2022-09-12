@@ -513,16 +513,27 @@ async function companionPost_createChat(req, res, next) {
         const check_pair = await pairDAO.check_other_pair(user_key);
 
         if(check_pair[0].cnt == 0) {
+            const check_host = await accompanyDAO.companion_postD_check_identity(post_key);
+
+            const parameter = { room_key: db_data.room_key, user_key, post_key: db_data.post_key, title: db_data.title };
+
+            if(user_key != check_host[0].user_key) {
+                const join_db_data = await chatDAO.chatRoom_companion(parameter);
+            }
+            const plus_personnel = await chatDAO.plus_personnel(db_data.room_key);
+
             res.json({ 
                 "db_data": db_data,
                 "user_key": user_key,
-                "result": "짝궁 가능" });
+                "result": "짝궁 가능"
+            });
         }
         else {
             res.json({ 
                 "db_data": db_data,
                 "user_key": user_key,
-                "result": "짝궁 불가" });
+                "result": "짝궁 불가"
+            });
         }
     } catch (err) {
         res.send("통신 오류");

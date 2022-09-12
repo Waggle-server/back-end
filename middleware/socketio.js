@@ -1,6 +1,5 @@
 "use strict";
 
-const { json } = require('body-parser');
 const SocketIO = require('socket.io');
 const accompanyDAO = require('../model/accompanyDAO');
 const chatDAO = require('../model/chatDAO');
@@ -11,7 +10,7 @@ module.exports = (server) => {
     io.on('connection', (socket)=>{
         // 방참여 요청
         socket.on('req_join_room', async (msg) => {
-            msg = JSON.parse(msg)
+            
             console.log('msg: ', msg)
             const parameters = {
                 room_key: msg.room_key,
@@ -19,19 +18,6 @@ module.exports = (server) => {
                 post_key: msg.post_key,
                 title: msg.title,
                 type: msg.type
-            }
-            console.log('parmaeters: ', parameters)
-
-            if ( msg.type == 1 ) { 
-                const check_host = await accompanyDAO.companion_postD_check_identity(parameters.post_key);
-                if(parameters.user_key != check_host[0].user_key) {
-                    const join_db_data = await chatDAO.chatRoom_companion(parameters);
-                }
-                const plus_personnel = await chatDAO.plus_personnel(parameters.room_key);
-            }
-            
-            if ( msg.type == 2 ) { 
-                const join_db_data = await chatDAO.chatRoom_friend(parameters);
             }
             
             console.log('room_key: ', parameters.room_key)

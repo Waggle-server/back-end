@@ -192,7 +192,7 @@ function companion_postR_A_closing(parameter) {
         ORDER BY CASE when (accompany.personnel-count_personnel)=1 then 1 
                       when (accompany.personnel-count_personnel)=2 then 2 
                       when (accompany.personnel-count_personnel)=3 then 3 
-                 when (accompany.personnel-count_personnel)=4 then 4
+					  when (accompany.personnel-count_personnel)=4 then 4
                       when (accompany.personnel-count_personnel)=5 then 5
                       when (accompany.personnel-count_personnel)=6 then 6
                       when (accompany.personnel-count_personnel)=7 then 7
