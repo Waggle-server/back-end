@@ -11,7 +11,7 @@ module.exports = (server) => {
         // 방참여 요청
         socket.on('req_join_room', async (msg) => {
             
-            console.log('msg: ', msg)
+            console.log('msg: ', typeof(msg))
             const parameters = {
                 room_key: msg.room_key,
                 user_key: msg.user_key,
