@@ -239,7 +239,7 @@ function get_post_key(parameter) {
 }
 
 function get_post_user_key(parameter) {
-    return new Promise((resolve, rejcet) => {
+    return new Promise((resolve, reject) => {
         const queryData = `SELECT user_key FROM accompany where post_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
             if(db_data) resolve(db_data);
