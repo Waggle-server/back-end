@@ -35,10 +35,10 @@ module.exports = (server) => {
             console.log('room_key: ', parameters.room_key)
             socket.join(parameters.room_key);
 
-            let nickname = await chatDAO.modify_user_name(parameters.user_key);
-            nickname = nickname[0].nickname;
-            let asd = nickname +'님이 방에 입장하였습니다.';
-            io.to(parameters.room_key).emit('noti_join_room', asd);
+            // let nickname = await chatDAO.modify_user_name(parameters.user_key);
+            // nickname = nickname[0].nickname;
+            // let asd = nickname +'님이 방에 입장하였습니다.';
+            // io.to(parameters.room_key).emit('noti_join_room', asd);
         });
     
         // 채팅방에 채팅 요청
