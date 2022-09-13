@@ -512,14 +512,21 @@ async function companionPost_createChat(req, res, next) {
         //다른 사람과 짝궁이 되어있는 상태인지 확인
         const check_pair = await pairDAO.check_other_pair(user_key);
 
-        if(check_pair[0].cnt == 0) {
-            const check_host = await accompanyDAO.companion_postD_check_identity(post_key);
+        let parameter = { user_key, post_key };
 
-            const parameter = { room_key: db_data.room_key, user_key, post_key: db_data.post_key, title: db_data.title };
+        //이미 현재 채팅방에 들어가 있는 상태인지 확인
+        let already_room = await chatDAO.already_room(parameter);
+        already_room = already_room[0].cnt;
 
-            if(user_key != check_host[0].user_key) {
-                const join_db_data = await chatDAO.chatRoom_companion(parameter);
-            }
+        //게시글 user_key
+        const check_host = await accompanyDAO.companion_postD_check_identity(post_key);
+
+        //짝궁 상태인가, 호스트인가, 채팅방에 참여중인가 확인
+        if(check_pair[0].cnt == 0 && user_key != check_host[0].user_key && already_room == 0) {
+            
+            parameter = { room_key: db_data.room_key, user_key, post_key: db_data.post_key, title: db_data.title };
+
+            const join_db_data = await chatDAO.chatRoom_companion(parameter);
             const plus_personnel = await chatDAO.plus_personnel(db_data.room_key);
 
             res.json({ 
@@ -536,6 +543,7 @@ async function companionPost_createChat(req, res, next) {
             });
         }
     } catch (err) {
+        console.log(err)
         res.send("통신 오류");
     }
 }
