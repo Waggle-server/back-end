@@ -4,7 +4,7 @@ const {db} = require("../config/dbconn");
 //채팅방 리스트
 function chat_listR(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `SELECT room_key, chat_list.title, nickname, img FROM chat_list 
+        const queryData = `SELECT room_key, chat_list.title, nickname, img, chat_list.post_key, chat_list.type FROM chat_list 
                            LEFT OUTER JOIN user on chat_list.user_key = user.user_key 
                            LEFT OUTER JOIN accompany on chat_list.post_key = accompany.post_key
                            where chat_list.user_key = ?

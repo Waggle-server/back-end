@@ -360,12 +360,17 @@ async function companionPost_search_user(req, res, next) {
             limit: page.limit
         }
 
-        const db_data = await accompanyDAO.companion_search_user(parameter);
+        if (parameter.search_user == (null || undefined || "")) {
+            res.json({ db_data: [] })
+        } else {
+            const db_data = await accompanyDAO.companion_search_user(parameter);
         
-        res.json({
-            "db_data": db_data
-        });
+            res.json({
+                "db_data": db_data
+            });
+        }
     } catch (err) {
+        console.log(err)
         res.send("사용자를 입력하세요.");
     }
 }
@@ -382,11 +387,15 @@ async function companionPost_search_area(req, res, next) {
             limit: page.limit
         }
 
-        const db_data = await accompanyDAO.companion_search_area(parameter);
+        if (parameter.search_area == (null || undefined || "")) {
+            res.json({ db_data: [] })
+        } else {
+            const db_data = await accompanyDAO.companion_search_user(parameter);
         
-        res.json({
-            "db_data": db_data
-        });
+            res.json({
+                "db_data": db_data
+            });
+        }
     } catch (err) {
         res.send("지역을 입력하세요.");
     }
