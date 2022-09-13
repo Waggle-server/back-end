@@ -277,12 +277,14 @@ async function companionPost_delete(req, res, next) {
 async function companionPost_read(req, res, next) {
     try {
         const post_key = req.params.post_key;
-        const user_key = await chatDAO.participant_list(post_key);
+        const user_key = await accompanyDAO.companion_postD_check_identity(post_key);
+        const user_keys = await chatDAO.participant_list(post_key);
         const db_data = await accompanyDAO.companion_postR(post_key);
 
         res.json({
             "db_data": db_data,
             "user_key": user_key,
+            "user_keys": user_keys,
             "post_key": post_key
         });
     } catch (err) {
