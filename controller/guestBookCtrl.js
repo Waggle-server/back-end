@@ -105,7 +105,7 @@ const gbCreate = async (req, res) => {
     let parameters = {
         gp_key: req.body.gp_key,
         user_key: (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null,
-        comment: req.body.comment.replace("\"", ""),
+        comment: req.body.comment.replace(/\"/gi, ""),
         img: (imgFile != undefined) ? (imgFile.originalname).split('.')[1] : undefined
     }
     console.log(parameters);
