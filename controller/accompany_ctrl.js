@@ -390,7 +390,7 @@ async function companionPost_search_area(req, res, next) {
         if (parameter.search_area == (null || undefined || "")) {
             res.json({ db_data: [] })
         } else {
-            const db_data = await accompanyDAO.companion_search_user(parameter);
+            const db_data = await accompanyDAO.companion_search_area(parameter);
         
             res.json({
                 "db_data": db_data

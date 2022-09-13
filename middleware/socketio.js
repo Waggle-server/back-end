@@ -32,6 +32,7 @@ module.exports = (server) => {
     
         // 채팅방에 채팅 요청
         socket.on('req_room_message', async(msg) => {
+            console.log(msg)
             msg = JSON.parse(msg)
             const parameter = {
                 room_key: msg.room_key,
