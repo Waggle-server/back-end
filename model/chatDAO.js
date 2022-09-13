@@ -119,7 +119,7 @@ function chat_companion(parameter) {
 
 function chat_companion_R(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `SELECT chat_key, chating.user_key, msg, date, nickname, img FROM chating LEFT OUTER JOIN user ON chating.user_key = user.user_key where chat_key = ?`;
+        const queryData = `SELECT chat_key, chating.user_key as user_key, msg, date, nickname, img, chating.type FROM chating LEFT OUTER JOIN user ON chating.user_key = user.user_key where chat_key = ?`;
         db.query(queryData, [parameter], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);
