@@ -299,7 +299,8 @@ function participant_list(parameter) {
     })
 }
 
-module.exports = {  
+module.exports = {
+    participant_list,
     chat_listR,
     chat_read_each,
     my_profile_info,
