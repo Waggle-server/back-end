@@ -66,9 +66,9 @@ const gpCreate = async (req, res) => {
 
     const parameters = {
         user_key: (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null,
-        place: req.body.place,
-        address: req.body.address,
-        des: req.body.des,
+        place: req.body.place.replace("\"", ""),
+        address: req.body.address.replace("\"", ""),
+        des: req.body.des.replace("\"", ""),
         img: (imgFile != "" && imgFile != undefined) ? (imgFile.originalname).split('.')[1] : null
     }
 
