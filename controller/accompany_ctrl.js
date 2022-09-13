@@ -277,7 +277,7 @@ async function companionPost_delete(req, res, next) {
 async function companionPost_read(req, res, next) {
     try {
         const post_key = req.params.post_key;
-        const user_key = await accompanyDAO.companion_postD_check_identity(post_key);
+        const user_key = await chatDAO.participant_list(post_key);
         const db_data = await accompanyDAO.companion_postR(post_key);
 
         res.json({
@@ -521,7 +521,7 @@ async function companionPost_createChat(req, res, next) {
         //게시글 user_key
         const check_host = await accompanyDAO.companion_postD_check_identity(post_key);
 
-        //짝궁 상태인가, 호스트인가, 채팅방에 참여중인가 확인
+        //현재 사용자가 짝궁 상태인가, 호스트인가, 채팅방에 참여중인가 확인
         if(check_pair[0].cnt == 0 && user_key != check_host[0].user_key && already_room == 0) {
             
             parameter = { room_key: db_data.room_key, user_key, post_key: db_data.post_key, title: db_data.title };
@@ -531,14 +531,11 @@ async function companionPost_createChat(req, res, next) {
 
             res.json({ 
                 "db_data": db_data,
-                "user_key": user_key,
                 "result": "짝궁 가능"
             });
-        }
-        else {
+        } else {
             res.json({ 
                 "db_data": db_data,
-                "user_key": user_key,
                 "result": "짝궁 불가"
             });
         }
