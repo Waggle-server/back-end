@@ -11,7 +11,7 @@ router.get('/pair_list', pair_ctrl.pair_list);
 //큐알 값(user_id) 보내주기 - 사용자버전
 router.get('/qr_info', pair_ctrl.qr_info);
 //큐알 체크 - 호스트버전
-router.post('/qr_check/:post_key', pair_ctrl.qr_check);
+router.post('/qr_check/:post_key/:qr', pair_ctrl.qr_check);
 
 //비활성화 시키기
 router.post('/user_disable/:mate_key', pair_ctrl.user_disable);

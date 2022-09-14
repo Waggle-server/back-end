@@ -104,30 +104,10 @@ function qr_check_id(parameter) {
     });
 }
 
-function user_check(parameter) {
-    return new Promise((resolve, reject) => {
-        const queryData = `SELECT id FROM chat_list LEFT OUTER JOIN user ON chat_list.user_key = user.user_key where post_key = ? AND id = ?`;
-        db.query(queryData, [parameter.post_key, parameter.qr], (err, db_data) => {
-            if(db_data) resolve(db_data);
-            else reject(err);
-        })
-    });
-}
-
-function get_user_key(parameter) {
-    return new Promise((resolve, reject) => {
-        const queryData = `SELECT user_key FROM user where id = ?`;
-        db.query(queryData, [parameter], (err, db_data) => {
-            if(db_data) resolve(db_data);
-            else reject(err);
-        })
-    });
-}
-
 function user_connect(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `UPDATE pair_list SET connect = 1 where post_key =? AND user_key = ?`;
-        db.query(queryData, [parameter.post_key, parameter.id_to_key], (err, db_data) => {
+        db.query(queryData, [parameter.post_key, parameter.qr], (err, db_data) => {
             if(err) reject(err);
             else resolve(db_data);
         })
@@ -349,8 +329,6 @@ module.exports = {
     insert_pair_hostV,
     check_other_pair,
     qr_check_id,
-    user_check,
-    get_user_key,
     user_connect,
     user_connect_zero,
     user_connect_one,

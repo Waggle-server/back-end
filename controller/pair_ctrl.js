@@ -49,26 +49,17 @@ async function qr_info(req, res, next) {
 async function qr_check(req, res, next) {
     try {
         const post_key = req.params.post_key;
-        const qr = req.body.qr; //qr == user_id 값임
+        const qr = req.params.qr; //qr == user_key 값임
 
         let parameter = { post_key, qr };
-
-        //user_id값 가져옴
-        let qr_data = await pairDAO.user_check(parameter);
-        qr_data = qr_data[0].id;
-
-        //user_key값 가져옴
-        let id_to_key = await pairDAO.get_user_key(qr_data);
-        id_to_key = id_to_key[0].user_key;
-
-        parameter = {post_key, id_to_key};
 
         //user_key, post_key에 해당하는 데이터의 connect = 1로 update
         const db_data = await pairDAO.user_connect(parameter);
 
         res.send({ result: "success" });
     } catch (err) {
-        res.send('OR 인증 오류')
+        console.log(err)
+        res.send({ result: 'QR 인증 오류' })
     }
 }
 
