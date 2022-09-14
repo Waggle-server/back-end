@@ -165,7 +165,7 @@ const paging = (currentPage, pageSize) => {
 async function show_photo(req, res, next) {
     try {
         const post_key = req.params.post_key;
-        
+
         const db_data = await pairDAO.load_photo(post_key);
 
         res.json({
@@ -289,32 +289,14 @@ async function pair_rate(req, res, next) {
             console.log(parameter)
 
             let db_data = await pairDAO.user_rating(parameter);
+            let disconnect = await pairDAO.disconnect(parameter);
+            let trip_end = await pairDAO.end_of_trip(parameter);
+            let type_zero = await pairDAO.type_zero(user_key);
         };  
         res.send({ result: "success" });
     } catch (err) {
         console.log(err)
         res.send('평가 오류')
-    }
-}
-
-async function disconnect_pair(req, res, next) {
-    try {
-        const post_key = req.params.post_key;
-        const user_data = await pairDAO.load_mate_key_forPost(post_key);
-        console.log(user_data[0].mate_key)
-
-        for(let i=0; i<user_data.length; i++){
-            let user_key = user_data[i].mate_key;
-            const parameter = { post_key, user_key };
-
-            const disconnect = await pairDAO.disconnect(parameter);
-            const trip_end = await pairDAO.end_of_trip(parameter);
-            const type_zero = await pairDAO.type_zero(user_key);
-        }    
-
-        res.send({ result: 1 });
-    } catch (err) {
-        res.send('연결 끊기 오류');
     }
 }
 
@@ -330,6 +312,5 @@ module.exports = {
     todo_list,
     show_todo_list,
     rating_user_info,
-    pair_rate,
-    disconnect_pair
+    pair_rate
 }
