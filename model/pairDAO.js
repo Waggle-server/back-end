@@ -34,6 +34,16 @@ function pair_list_user(parameter) {
     })
 }
 
+function post_host_key(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT user_key FROM accompany where post_key = ?`;
+        db.query(queryData, [parameter], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    });
+}
+
 function load_user_key(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT user_key FROM chat_list where post_key = ?`;
@@ -332,6 +342,7 @@ module.exports = {
     get_post_key,
     post_user_key,
     pair_list_user,
+    post_host_key,
     load_user_key,
     load_user_id,
     insert_pair,
