@@ -109,51 +109,40 @@ async function photo_share(req, res, next) {
         const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const photo = req.files;
 
-        const parameter = { user_key, post_key };
-        let check_connect = await pairDAO.check_connect(parameter);
-        check_connect = check_connect[0].connect;
-        console.log(check_connect)
+        //post_key와 user_key를 사용하여 mate_key 불러오기
+        let parameter = { post_key, user_key };
+        let mate_key = await pairDAO.load_mate_key_forUser(parameter);
+        mate_key = mate_key[0].mate_key;
 
-        //connect = 1일 때만 사진 공유 가능
-        if (check_connect == 1) {
-            //post_key와 user_key를 사용하여 mate_key 불러오기
-            let parameter = { post_key, user_key };
-            let mate_key = await pairDAO.load_mate_key_forUser(parameter);
-            mate_key = mate_key[0].mate_key;
+        for (let i in photo) {
+            let img = photo[i].filename;
+            parameter = { mate_key, user_key, img };
+            const db_data = await pairDAO.save_photo(parameter);
+        }
 
-            for (let i in photo) {
-                let img = photo[i].filename;
-                parameter = { mate_key, user_key, img };
-                const db_data = await pairDAO.save_photo(parameter);
-            }
+        //첫 사진 공유 시 훈장 지급
+        const cnt = await pairDAO.count_share(user_key);
 
-            //첫 사진 공유 시 훈장 지급
-            const cnt = await pairDAO.count_share(user_key);
-            console.log(cnt)
+        if( cnt[0].user_key_cnt==1 ) {
+            let send_deco = await decoDAO.send_deco(14); 
+            let deco_data = send_deco[0];
 
-            if( cnt[0].user_key_cnt==1 ) {
-                let send_deco = await decoDAO.send_deco(14); 
-                let deco_data = send_deco[0];
+            let alarm_data = await alarmDAO.alarm_content(4);
+            alarm_data = alarm_data[0].msg;
 
-                let alarm_data = await alarmDAO.alarm_content(4);
-                alarm_data = alarm_data[0].msg;
+            const msg = deco_data.content + " " + alarm_data;
 
-                const msg = deco_data.content + " " + alarm_data;
+            let parameter = { user_key, msg, post_key };
+            const insert_alarm_data = await alarmDAO.deco_save(parameter);
 
-                let parameter = { user_key, msg, post_key };
-                const insert_alarm_data = await alarmDAO.deco_save(parameter);
+            parameter = { user_key, deco_key: 14 };
+            const db_daco = await decoDAO.insert_deco(parameter);
 
-                parameter = { user_key, deco_key: 14 };
-                const db_daco = await decoDAO.insert_deco(parameter);
+            const alarm_key = insert_alarm_data.insertId;
 
-                const alarm_key = insert_alarm_data.insertId;
-
-                res.send({ result: post_key, deco_data, alarm_data, alarm_key });
-            } else {
-                res.send({ result: "success" });
-            }
+            res.send({ result: post_key, deco_data, alarm_data, alarm_key });
         } else {
-            res.send({ result: "fail" });
+            res.send({ result: "success" });
         }
     } catch (err) {
         console.log(err)
@@ -176,7 +165,7 @@ const paging = (currentPage, pageSize) => {
 async function show_photo(req, res, next) {
     try {
         const post_key = req.params.post_key;
-
+        
         const db_data = await pairDAO.load_photo(post_key);
 
         res.json({
