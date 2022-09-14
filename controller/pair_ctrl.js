@@ -18,10 +18,12 @@ async function pair_list(req, res, next) {
 
         let db_data = await pairDAO.pair_list_user(get_post_key);
         let host_key = await pairDAO.post_host_key(get_post_key);
+        host_key = host_key[0].user_key;
 
         res.json({
             "db_data": db_data,
-            "host_key": host_key
+            "host_key": host_key,
+            "post_key": get_post_key
         })
     } catch (err) {
         console.log(err)
