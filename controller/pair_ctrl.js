@@ -12,7 +12,6 @@ async function pair_list(req, res, next) {
         //user_key의 post_key select
         let get_post_key = await pairDAO.get_post_key(user_key);
         get_post_key = get_post_key[0].post_key;
-        console.log(get_post_key)
 
         //post_key의 작성자 select
         let post_user_key = await pairDAO.post_user_key(get_post_key);
@@ -103,54 +102,58 @@ async function user_restart(req, res, next) {
     }
 }
 
-//사진 공유(짝궁 메인)
+//사진 공유
 async function photo_share(req, res, next) {
     try {
         const post_key = req.params.post_key;
         const user_key = (req.get('user_key') != "" && req.get('user_key') != undefined) ? req.get('user_key') : null;
         const photo = req.files;
 
-        //사진 한번에 받아서 DB에 한 줄씩 넣기
-        let str = "";
-        for (let i in photo) {
-            str += photo[i].filename + ", ";
-        }
-        const string = str.slice(0, -2);
+        const parameter = { user_key, post_key };
+        let check_connect = await pairDAO.check_connect(parameter);
+        check_connect = check_connect[0].connect;
+        console.log(check_connect)
 
-        //post_key와 user_key를 사용하여 mate_key 불러오기
-        let parameter = { post_key, user_key };
-        let mate_key = await pairDAO.load_mate_key_forUser(parameter);
-        mate_key = mate_key[0].mate_key;
+        //connect = 1일 때만 사진 공유 가능
+        if (check_connect == 1) {
+            //post_key와 user_key를 사용하여 mate_key 불러오기
+            let parameter = { post_key, user_key };
+            let mate_key = await pairDAO.load_mate_key_forUser(parameter);
+            mate_key = mate_key[0].mate_key;
 
-        parameter = { mate_key, user_key, string };
-        const db_data = await pairDAO.save_photo(parameter);
+            for (let i in photo) {
+                let img = photo[i].filename;
+                parameter = { mate_key, user_key, img };
+                const db_data = await pairDAO.save_photo(parameter);
+            }
 
-        //첫 사진 공유 시 훈장 지급
-        const cnt = await pairDAO.count_share(user_key);
-        console.log(cnt)
+            //첫 사진 공유 시 훈장 지급
+            const cnt = await pairDAO.count_share(user_key);
+            console.log(cnt)
 
-        if( cnt[0].user_key_cnt==1 ) {
-            let send_deco = await decoDAO.send_deco(14); 
-            let deco_data = send_deco[0];
+            if( cnt[0].user_key_cnt==1 ) {
+                let send_deco = await decoDAO.send_deco(14); 
+                let deco_data = send_deco[0];
 
-            let alarm_data = await alarmDAO.alarm_content(4);
-            alarm_data = alarm_data[0].msg;
+                let alarm_data = await alarmDAO.alarm_content(4);
+                alarm_data = alarm_data[0].msg;
 
-            const msg = deco_data.content + " " + alarm_data;
+                const msg = deco_data.content + " " + alarm_data;
 
-            let parameter = { user_key, msg, post_key };
-            const insert_alarm_data = await alarmDAO.deco_save(parameter);
+                let parameter = { user_key, msg, post_key };
+                const insert_alarm_data = await alarmDAO.deco_save(parameter);
 
-            parameter = { user_key, deco_key: 14 };
-            const db_daco = await decoDAO.insert_deco(parameter);
+                parameter = { user_key, deco_key: 14 };
+                const db_daco = await decoDAO.insert_deco(parameter);
 
-            const alarm_key = insert_alarm_data.insertId;
+                const alarm_key = insert_alarm_data.insertId;
 
-            res.send({ result: post_key, deco_data, alarm_data, alarm_key });
-        }
-
-        else {
-            res.send({ result: "success" });
+                res.send({ result: post_key, deco_data, alarm_data, alarm_key });
+            } else {
+                res.send({ result: "success" });
+            }
+        } else {
+            res.send({ result: "fail" });
         }
     } catch (err) {
         console.log(err)
@@ -169,22 +172,12 @@ const paging = (currentPage, pageSize) => {
     return result;
 }
 
-//공유된 사진 불러오기
+//짝궁 메인(최근 사진 10개만)
 async function show_photo(req, res, next) {
     try {
-        const mate_key = req.params.mate_key;
+        const post_key = req.params.post_key;
 
-        let currentPage = req.query.page;
-        const pageSize = 10;
-        const page = paging(currentPage, pageSize);
-
-        const parameter = {
-            mate_key: mate_key,
-            offset: page.offset,
-            limit: page.limit
-        }
-
-        const db_data = await pairDAO.load_photo(parameter);
+        const db_data = await pairDAO.load_photo(post_key);
 
         res.json({
             "db_data": db_data

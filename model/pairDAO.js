@@ -25,7 +25,7 @@ function post_user_key(parameter) {
 function pair_list_user(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT nickname, img, (SELECT personnel FROM chat_list 
-                           WHERE chat_list.user_key=user.user_key AND chat_list.post_key=pair_list.post_key) AS personnel FROM pair_list 
+                           WHERE chat_list.user_key=user.user_key AND chat_list.post_key=pair_list.post_key) AS personnel, connect FROM pair_list 
                            LEFT OUTER JOIN user ON pair_list.user_key = user.user_key where post_key = ? AND trip_end = 0 ORDER BY personnel DESC`;
         db.query(queryData, [parameter], (err, db_data) => {
             if(db_data) resolve(db_data);
@@ -164,6 +164,16 @@ function pair_auth_start(parameter) {
     });
 }
 
+function check_connect(parameter) {
+    return new Promise((resolve, reject) => {
+        const queryData = `SELECT connect FROM pair_list where user_key = ? AND post_key = ?`;
+        db.query(queryData, [parameter.user_key, parameter.post_key], (err, db_data) => {
+            if(db_data) resolve(db_data);
+            else reject(err);
+        })
+    })
+}
+
 function load_mate_key_forUser(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `SELECT mate_key FROM pair_list where post_key = ? AND user_key = ?`;
@@ -187,7 +197,7 @@ function load_mate_key_forPost(parameter) {
 function save_photo(parameter) {
     return new Promise((resolve, reject) => {
         const queryData = `INSERT INTO pair(mate_key, user_key, img, type) values (?, ?, ?, 1)`;
-        db.query(queryData, [parameter.mate_key, parameter.user_key, parameter.string], (err, db_data) => {
+        db.query(queryData, [parameter.mate_key, parameter.user_key, parameter.img], (err, db_data) => {
             if(err) reject(err);
             else resolve(db_data);
         })
@@ -196,8 +206,8 @@ function save_photo(parameter) {
 
 function load_photo(parameter) {
     return new Promise((resolve, reject) => {
-        const queryData = `SELECT img FROM pair where mate_key = ? AND img IS NOT NULL LIMIT ?, ?`;
-        db.query(queryData, [parameter.mate_key, parameter.offset, parameter.limit], (err, db_data) => {
+        const queryData = `SELECT img FROM pair LEFT OUTER JOIN pair_list ON pair.mate_key = pair_list.mate_key where pair_list.post_key = ? AND img IS NOT NULL ORDER BY date DESC LIMIT 10`;
+        db.query(queryData, [parameter], (err, db_data) => {
             if(db_data) resolve(db_data);
             else reject(err);
         })
@@ -335,6 +345,7 @@ module.exports = {
     user_connect_one,
     pair_auth_stop,
     pair_auth_start,
+    check_connect,
     load_mate_key_forUser,
     load_mate_key_forPost,
     save_photo,

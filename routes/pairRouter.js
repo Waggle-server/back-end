@@ -18,10 +18,10 @@ router.post('/user_disable/:mate_key', pair_ctrl.user_disable);
 //재활성화(여행시작 누를때마다 -> 잘못 x버튼을 눌렀을 경우)
 router.post('/user_restart/:mate_key', pair_ctrl.user_restart);
 
-//사진 공유 (짝궁 메인)
+//사진 공유
 router.post('/photo_share/:post_key', multer.uploadAction.array("images", 10), pair_ctrl.photo_share);
-//사진 공유 보여주기 (짝궁 메인 sql_paging 10개씩)
-router.get('/show_photo/:mate_key', pair_ctrl.show_photo);
+//사진 공유 보여주기 (짝궁 메인에 최근 사진 10개만)
+router.get('/show_photo/:post_key', pair_ctrl.show_photo);
 //사진 공유 (짝궁 메인에서 전체 보기 눌렀을 때)
 router.get('/show_all_photo/:mate_key', pair_ctrl.show_all_photo);
 
